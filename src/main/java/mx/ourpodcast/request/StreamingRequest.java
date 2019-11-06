@@ -1,43 +1,21 @@
-package mx.ourpodcast.model;
+package mx.ourpodcast.request;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "streaming")
-public class Streaming {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+public class StreamingRequest {
     private Integer idStreaming;
 
-    @Column(name = "viewCount")
     private Integer viewCount;
 
-    @Column(name = "beginDateTime")
     private LocalDateTime beginDateTime;
 
-    @Column(name = "finishDateTime")
     private LocalDateTime finishDateTime;
 
-    @OneToOne
-    @JoinColumn(name = "idUsuario")
-    private Usuario usuario;
+    private Integer idUsuario;
 
-    @OneToOne
-    @JoinColumn(name = "idPodcast")
-    private Podcast podcast;
+    private Integer idPodcast;
 
-    public Streaming(){}
+    public StreamingRequest(){}
 
     /**
      * @return the idStreaming
@@ -54,31 +32,31 @@ public class Streaming {
     }
 
     /**
-     * @return the usuario
+     * @return the idUsuario
      */
-    public Usuario getUsuario() {
-        return usuario;
+    public Integer getIdUsuario() {
+        return idUsuario;
     }
 
     /**
-     * @param usuario the usuario to set
+     * @param idUsuario the idUsuario to set
      */
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     /**
-     * @return the podcast
+     * @return the idPodcast
      */
-    public Podcast getPodcast() {
-        return podcast;
+    public Integer getIdPodcast() {
+        return idPodcast;
     }
 
     /**
-     * @param podcast the podcast to set
+     * @param idPodcast the idPodcast to set
      */
-    public void setPodcast(Podcast podcast) {
-        this.podcast = podcast;
+    public void setIdPodcast(Integer idPodcast) {
+        this.idPodcast = idPodcast;
     }
 
     /**
@@ -122,6 +100,4 @@ public class Streaming {
     public void setViewCount(Integer viewCount) {
         this.viewCount = viewCount;
     }
-    
-
 }

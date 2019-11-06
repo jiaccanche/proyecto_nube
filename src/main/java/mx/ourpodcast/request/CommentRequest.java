@@ -9,23 +9,22 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import mx.ourpodcast.model.Streaming;
-import mx.ourpodcast.model.Usuario;
 
 @Entity
 @Table(name = "comments")
 public class CommentRequest{
 
    
-    private int idComment;
+    private Integer idComment;
 
-    @NotNull(message = "El usuario es nulo")
-    private Usuario usuario;
+    @NotNull(message = "El idUsuario es nulo")
+    private Integer idUsuario;
 
     @NotNull(message = "El streaming es nulo")
-    private Streaming streaming;
+    private Integer idStreaming;
 
     @NotNull(message = "La fecha-hora es nula")
-    private LocalDateTime dateTime;
+    private LocalDateTime creationDate;
 
     @NotNull(message = "El contenido es nulo")
     @Size(min = 5, max = 500, message 
@@ -37,43 +36,43 @@ public class CommentRequest{
     /**
      * @return the idComment
      */
-    public int getIdComment() {
+    public Integer getIdComment() {
         return idComment;
     }
 
     /**
      * @param idComment the idComment to set
      */
-    public void setIdComment(int idComment) {
+    public void setIdComment(Integer idComment) {
         this.idComment = idComment;
     }
 
     /**
-     * @return the usuario
+     * @return the idUsuario
      */
-    public Usuario getUsuario() {
-        return usuario;
+    public Integer getIdUsuario() {
+        return idUsuario;
     }
 
     /**
-     * @param usuario the usuario to set
+     * @param idUsuario the idUsuario to set
      */
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     /**
      * @return the streaming
      */
-    public Streaming getStreaming() {
-        return streaming;
+    public Integer getIdStreaming() {
+        return idStreaming;
     }
 
     /**
      * @param streaming the streaming to set
      */
-    public void setStreaming(Streaming streaming) {
-        this.streaming = streaming;
+    public void setIdStreaming(Integer idStreaming) {
+        this.idStreaming = idStreaming;
     }
 
     /**
@@ -91,17 +90,17 @@ public class CommentRequest{
     }
 
     /**
-     * @return the dateTime
+     * @return the  creationDate
      */
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
     /**
-     * @param dateTime the dateTime to set
+     * @param creationDate the creationDate to set
      */
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
 }

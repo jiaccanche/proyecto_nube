@@ -3,7 +3,6 @@ package mx.ourpodcast.service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +12,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.stereotype.Service;
 
-import mx.ourpodcast.repository.PodcastRepository;
-import mx.ourpodcast.request.PodcastRequest;
 import mx.ourpodcast.exceptions.PodcastAlreadyExistException;
 import mx.ourpodcast.exceptions.PodcastNotFoundException;
-import mx.ourpodcast.exceptions.UserNotFoundException;
 import mx.ourpodcast.model.Podcast;
-import mx.ourpodcast.model.Usuario;
+import mx.ourpodcast.repository.PodcastRepository;
+import mx.ourpodcast.request.PodcastRequest;
 
 @Service
 public class PodcastService {
@@ -42,9 +39,6 @@ public class PodcastService {
             podcast.setCode(request.getCode());
             podcast.setContentUrl(request.getContentUrl());
             podcast.setTitle(request.getTitle());
-            Usuario usuario = new Usuario();
-            // HACER usuario = getUsuarioById(request.getUsuarioId);
-            podcast.setUsuario(usuario);
 
             podcastRepository.save(podcast);
             return podcast;
@@ -58,9 +52,7 @@ public class PodcastService {
             podcast.setCode(request.getCode());
             podcast.setContentUrl(request.getContentUrl());
             podcast.setTitle(request.getTitle());
-            Usuario usuario = new Usuario();
-            // CAMBIAR POR EL USUARIO ENCONTRADO CON EL ID
-            podcast.setUsuario(usuario);
+           
             podcastRepository.save(podcast);
             return podcast;
         } else{
@@ -76,17 +68,6 @@ public class PodcastService {
             podcastRepository.delete(podcast);
         } else{
             throw new PodcastNotFoundException("No existe el podcast con el id " + idPodcast);
-        }
-    }
-
-    public List<Podcast> getPodcastByUser(int idUsuario) {
-        try {
-            // CAMBIAR POR GETUSUARIOBYID CUANDO EXISTA LA ENTIDAD USUARIO
-            Usuario usuario = new Usuario();
-            List<Podcast> podcasts = podcastRepository.findAllByUsuario(usuario);
-            return podcasts;
-        } catch (NoSuchElementException nse) {
-            throw new UserNotFoundException("No existe un usuario con el id " + idUsuario);
         }
     }
 

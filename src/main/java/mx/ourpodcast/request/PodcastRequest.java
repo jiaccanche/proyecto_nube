@@ -21,9 +21,6 @@ public class PodcastRequest{
     @NotNull(message = "El contenido es nulo")
     private String contentUrl;
 
-    @NotNull(message = "El usuario es nulo")
-    private Integer idUsuario;
-
     private Integer idPodcast;
 
     public PodcastRequest(){}
@@ -72,20 +69,6 @@ public class PodcastRequest{
         this.contentUrl = contentUrl;
     }
 
-    /**
-     * @return the idUsuario
-     */
-    public Integer getidUsuario() {
-        return idUsuario;
-    }
-
-    /**
-     * @param idUsuario the idUsuario to set
-     */
-    public void setidUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-    
     /**
      * @return the idPodcast
      */

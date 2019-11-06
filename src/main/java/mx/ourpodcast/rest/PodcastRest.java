@@ -62,12 +62,6 @@ public class PodcastRest{
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/podcast/user/{idUsuario}")
-    public ResponseEntity<List<Podcast>> getPodcastByUser(@PathVariable int idUsuario){
-        List<Podcast> podcasts = podcastService.getPodcastByUser(idUsuario);
-        return ResponseEntity.ok().body(podcasts);
-    }
-
     @GetMapping("/podcast/{idPodcast}/splitted")
     public ResponseEntity<ResourceRegion> getPodcastContentSplitted(@PathVariable int idPodcast, @RequestHeader HttpHeaders headers) throws IOException {
         ResourceRegion region = podcastService.getPodcastContentSplitted(idPodcast, headers);

@@ -19,7 +19,7 @@ public class Comment{
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
     @Column
-    private int idComment;
+    private Integer idComment;
 
     @OneToOne
     @Column(name = "idUsuario", nullable = false)
@@ -29,8 +29,8 @@ public class Comment{
     @JoinColumn(name = "idStreaming", nullable = false)
     private Streaming streaming;
 
-    @Column(name = "hourDate")
-    private LocalDateTime dateTime;
+    @Column(name = "creationDate")
+    private LocalDateTime  creationDate;
 
     @Column(name = "content")
     private String content;
@@ -40,14 +40,14 @@ public class Comment{
     /**
      * @return the idComment
      */
-    public int getIdComment() {
+    public Integer getIdComment() {
         return idComment;
     }
 
     /**
      * @param idComment the idComment to set
      */
-    public void setIdComment(int idComment) {
+    public void setIdComment(Integer idComment) {
         this.idComment = idComment;
     }
 
@@ -94,17 +94,17 @@ public class Comment{
     }
 
     /**
-     * @return the dateTime
+     * @return the  creationDate
      */
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
     /**
-     * @param dateTime the dateTime to set
+     * @param creationDate the creationDate to set
      */
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
 }

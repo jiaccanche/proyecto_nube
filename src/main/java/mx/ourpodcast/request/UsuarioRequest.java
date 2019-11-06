@@ -1,44 +1,46 @@
-package mx.ourpodcast.model;
+package mx.ourpodcast.request;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "usuario")
-public class Usuario{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+public class UsuarioRequest {
+    
     private Integer idUsuario;
 
-    @Column(name = "name")
+    @NotNull(message = "El nombre es nulo")
+    @Size(min = 5, max = 50, message 
+      = "El nombre debe tener entre 5 y 50 caracteres")
+    @NotEmpty(message = "El nombre es vacío")
     private String name;
 
-    @Column(name = "email")
+    @NotNull(message = "El email es nulo")
+    @Size(min = 10, max = 30, message 
+      = "El email debe tener entre 10 y 30 caracteres")
+    @NotEmpty(message = "El email es vacío")
     private String email;
 
-    @Column(name = "password")
+    @NotNull(message = "El password es nulo")
+    @Size(min = 8, max = 12, message 
+      = "El password debe tener entre12 y 50 caracteres")
+    @NotEmpty(message = "El título es vacío")
     private String password;
 
-    @Column(name = "username")
+    @NotNull(message = "El username es nulo")
+    @Size(min = 5, max = 10, message 
+      = "El username debe tener entre 5 y 10 caracteres")
+    @NotEmpty(message = "El username es vacío")
     private String username;
 
-    @Column(name = "birthday")
     private LocalDateTime birthday;
 
-    @Column(name = "state")
     private boolean state;
 
-    @Column(name = "token")
     private String token;
 
-    public Usuario(){}
+    public UsuarioRequest(){}
 
     /**
      * @return the idUsuario
