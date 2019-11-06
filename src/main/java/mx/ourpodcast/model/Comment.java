@@ -1,0 +1,110 @@
+package mx.ourpodcast.model;
+
+import java.time.LocalDateTime;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "comments")
+public class Comment{
+
+    @Id
+    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @Column
+    private int idComment;
+
+    @OneToOne
+    @Column(name = "idUsuario", nullable = false)
+    private Usuario usuario;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idStreaming", nullable = false)
+    private Streaming streaming;
+
+    @Column(name = "hourDate")
+    private LocalDateTime dateTime;
+
+    @Column(name = "content")
+    private String content;
+
+    public Comment(){}
+
+    /**
+     * @return the idComment
+     */
+    public int getIdComment() {
+        return idComment;
+    }
+
+    /**
+     * @param idComment the idComment to set
+     */
+    public void setIdComment(int idComment) {
+        this.idComment = idComment;
+    }
+
+    /**
+     * @return the usuario
+     */
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    /**
+     * @param usuario the usuario to set
+     */
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    /**
+     * @return the streaming
+     */
+    public Streaming getStreaming() {
+        return streaming;
+    }
+
+    /**
+     * @param streaming the streaming to set
+     */
+    public void setStreaming(Streaming streaming) {
+        this.streaming = streaming;
+    }
+
+    /**
+     * @return the content
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * @param content the content to set
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * @return the dateTime
+     */
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    /**
+     * @param dateTime the dateTime to set
+     */
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+}
