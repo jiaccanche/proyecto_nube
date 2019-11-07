@@ -2,14 +2,13 @@ package mx.ourpodcast.model;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,11 +20,11 @@ public class Comment{
     @Column
     private Integer idComment;
 
-    @OneToOne
+    @ManyToOne
     @Column(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "idStreaming", nullable = false)
     private Streaming streaming;
 

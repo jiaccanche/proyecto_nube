@@ -19,6 +19,7 @@ public class PodcastRequest{
     private String code;
 
     @NotNull(message = "El contenido es nulo")
+    @NotEmpty(message = "El contenido es vacío")
     private String contentUrl;
 
     private Integer idPodcast;

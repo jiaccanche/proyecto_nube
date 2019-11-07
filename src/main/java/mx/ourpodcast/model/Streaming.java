@@ -2,12 +2,14 @@ package mx.ourpodcast.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -29,11 +31,11 @@ public class Streaming {
     @Column(name = "finishDateTime")
     private LocalDateTime finishDateTime;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idPodcast")
     private Podcast podcast;
 

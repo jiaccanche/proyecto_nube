@@ -1,5 +1,6 @@
 package mx.ourpodcast.rest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -56,14 +57,14 @@ public class StreamingRest{
     }
 
     @GetMapping("/streaming/usuario/{idUsuario}")
-    public ResponseEntity<List<Streaming>> getStreamingsByUsuario(){
-        List<Streaming> streamings = streamingService.getStreamingsByUsuario();
+    public ResponseEntity<List<Streaming>> getStreamingsByUsuario(@PathVariable Integer idUsuario){
+        List<Streaming> streamings = streamingService.getStreamingsByUsuario(idUsuario);
         return ResponseEntity.ok().body(streamings);
     }
 
     @GetMapping("/streaming/date/{date}")
-    public ResponseEntity<List<Streaming>> getStreamingsByDate(){
-        List<Streaming> streamings = streamingService.getStreamingsByDate();
+    public ResponseEntity<List<Streaming>> getStreamingsByDate(@PathVariable LocalDateTime date){
+        List<Streaming> streamings = streamingService.getStreamingsByDate(date);
         return ResponseEntity.ok().body(streamings);
     }
 }
