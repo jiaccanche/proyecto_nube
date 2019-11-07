@@ -12,6 +12,6 @@ import mx.ourpodcast.model.Usuario;
 public interface ChatRepository extends JpaRepository<Chat, Integer>{
 
 
-	List<Chat> findAllByUsuario(Usuario usuario);
-
+	List<Chat> findAllByUsuario1(Usuario usuario);
+	List<Chat> findAllByUsuario2(Usuario usuario);
 }

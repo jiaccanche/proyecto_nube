@@ -104,7 +104,8 @@ public class StreamingService{
 	}
 
 	public List<Streaming> getStreamingsByDate(LocalDateTime dateTime) {
-		List<Streaming> streamings = streamingRepository.findAllByDate(dateTime);
+        List<Streaming> streamings = streamingRepository.findAllBybeginDateTime(dateTime);
+        streamings.addAll(streamingRepository.findAllByfinishDateTime(dateTime));
 		return streamings;
 	}
 

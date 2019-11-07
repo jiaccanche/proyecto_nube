@@ -87,7 +87,8 @@ public class ChatService{
         UsuarioService usuarioService = new UsuarioService();
         Usuario usuario = usuarioService.getUsuarioById(idUsuario);
 
-        List<Chat> chats = chatRepository.findAllByUsuario(usuario);
+        List<Chat> chats = chatRepository.findAllByUsuario1(usuario);
+        chats.addAll(chatRepository.findAllByUsuario2(usuario));
         return chats;
 	}
 

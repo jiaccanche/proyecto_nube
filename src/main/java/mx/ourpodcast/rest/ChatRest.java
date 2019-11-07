@@ -57,7 +57,7 @@ public class ChatRest{
 
     @GetMapping("/chat/usuario/{idUsuario}")
     public ResponseEntity<List<Chat>> getAllChatsByUsuario(@PathVariable Integer idUsuario){
-        List<Chat> chats = chatService.getAllChatsByUsuario(idUsuario),
+        List<Chat> chats = chatService.getAllChatsByUsuario(idUsuario);
         return ResponseEntity.ok().body(chats);
     }
 }

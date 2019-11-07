@@ -7,5 +7,6 @@ import mx.ourpodcast.model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
-
+    public Usuario findByToken(String token);
+	public Usuario findByEmail(String email);
 }
