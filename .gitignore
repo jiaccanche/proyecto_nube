@@ -2,8 +2,8 @@
 *.code-workspace
 target/*
 target/*
-src/main/resources/*
-src/main/resources/application.properties
+#src/main/resources/*
+#src/main/resources/application.properties
 .classpath
 .project
 .settings/org.eclipse.core.resources.prefs
