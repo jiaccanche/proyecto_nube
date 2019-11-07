@@ -21,7 +21,7 @@ public class Comment{
     private Integer idComment;
 
     @ManyToOne
-    @Column(name = "idUsuario", nullable = false)
+    @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
