@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import mx.ourpodcast.model.Chat;
+import mx.ourpodcast.model.Usuario;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Integer>{
 
-	List<Chat> getAllChatsByUsuario(Integer idUsuario);
+
+	List<Chat> findAllByUsuario(Usuario usuario);
 
 }

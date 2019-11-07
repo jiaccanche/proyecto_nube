@@ -12,6 +12,7 @@ import mx.ourpodcast.model.Usuario;
 @Repository
 public interface StreamingRepository extends JpaRepository<Streaming, Integer>{
 
+	//TODO: Añadir query para obtener los streamings que se pongan en una fecha determinada
 	List<Streaming> findAllByDate(LocalDateTime dateTime);
 
 	List<Streaming> findAllByUsuario(Usuario usuario);
