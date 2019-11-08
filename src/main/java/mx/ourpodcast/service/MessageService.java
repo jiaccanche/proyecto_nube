@@ -44,10 +44,10 @@ public class MessageService{
 	}
 
 	public Message createMessage(@Valid MessageRequest request) {
-		Optional<Message> optional = messageRepository.findById(request.getIdMessage());
-        if(optional.isPresent()){
-            throw new MessageAlreadyExistsException("Ya existe un mensje con el id " + request.getIdMessage());
-        }else{
+		//Optional<Message> optional = messageRepository.findById(request.getIdMessage());
+        //if(optional.isPresent()){
+          //  throw new MessageAlreadyExistsException("Ya existe un mensje con el id " + request.getIdMessage());
+        //}else{
             Message message = new Message();
             message.setContent(request.getContent());
             message.setSendDate(request.getSendDate());
@@ -62,12 +62,12 @@ public class MessageService{
 
             messageRepository.save(message);
             return message;
-        }
+        //}
 	}
 
 	public Message updateMessage(@Valid MessageRequest request) {
-		Optional<Message> optional = messageRepository.findById(request.getIdMessage());
-        if(optional.isPresent()){
+		//Optional<Message> optional = messageRepository.findById(request.getIdMessage());
+        //if(optional.isPresent()){
             Message message = optional.get();
             message.setContent(request.getContent());
             
@@ -81,9 +81,9 @@ public class MessageService{
 
             messageRepository.save(message);
             return message;
-        }else{
-            throw new MessageNotFoundException("No existe un mensaje con el id " + request.getIdMessage());
-        }
+        //}else{
+          //  throw new MessageNotFoundException("No existe un mensaje con el id " + request.getIdMessage());
+        //}
 	}
 
 	public void deleteMessage(Integer idMessage) {
