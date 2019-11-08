@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class Streaming {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer idStreaming;
 

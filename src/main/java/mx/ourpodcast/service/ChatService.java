@@ -35,10 +35,10 @@ public class ChatService{
 	}
 
 	public Chat createChat(@Valid ChatRequest request) {
-        Optional<Chat> optional = chatRepository.findById(request.getIdChat());
-		if (optional.isPresent()) {
-            throw new ChatAlreadyExistsException("Ya existe un chat con id " + request.getIdChat());
-        }else{
+        //Optional<Chat> optional = chatRepository.findById(request.getIdChat());
+		//if (optional.isPresent()) {
+            //throw new ChatAlreadyExistsException("Ya existe un chat con id " + request.getIdChat());
+        //}else{
             Chat chat = new Chat();
             chat.setInitDate(request.getInitDate());
 
@@ -51,12 +51,12 @@ public class ChatService{
 
             chatRepository.save(chat);
             return chat;
-        }
+        //}
 	}
 
 	public Chat updateChat(@Valid ChatRequest request) {
 		Optional<Chat> optional = chatRepository.findById(request.getIdChat());
-		if (optional.isPresent()) {
+		//if (optional.isPresent()) {
             Chat chat = optional.get();
             chat.setInitDate(request.getInitDate());
 
@@ -69,9 +69,9 @@ public class ChatService{
 
             chatRepository.save(chat);
             return chat;
-        }else{
-            throw new ChatNotFoundException("No existe un chat con id " + request.getIdChat());
-        }
+        //}else{
+         //   throw new ChatNotFoundException("No existe un chat con id " + request.getIdChat());
+        //}
 	}
 
 	public void deleteChat(Integer idChat) {
