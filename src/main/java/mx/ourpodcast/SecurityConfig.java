@@ -25,10 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable() 
             .httpBasic().disable()
             .authorizeRequests()
-            .antMatchers("/login", "/registrar").permitAll()
-            .anyRequest().authenticated()
-            .and().logout().logoutUrl("/logout")
-            //.anyRequest().permitAll()
+            //.antMatchers("/login", "/registrar").permitAll()
+            //.anyRequest().authenticated()
+            //.and().logout().logoutUrl("/logout")
+            .anyRequest().permitAll()
             .and()
             .addFilterBefore(tokenFiltro, BasicAuthenticationFilter.class);
     }

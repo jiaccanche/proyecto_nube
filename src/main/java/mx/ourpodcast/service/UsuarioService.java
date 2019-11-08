@@ -1,5 +1,8 @@
 package mx.ourpodcast.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,6 +19,7 @@ import mx.ourpodcast.exceptions.UsuarioNotFoundException;
 import mx.ourpodcast.model.Usuario;
 import mx.ourpodcast.repository.UsuarioRepository;
 import mx.ourpodcast.request.UsuarioRequest;
+import mx.ourpodcast.request.loginRequest;
 
 @Service
 public class UsuarioService{
@@ -37,22 +41,28 @@ public class UsuarioService{
 	}
 
 	public Usuario createUsuario(@Valid UsuarioRequest request) {
-        Optional<Usuario> optional = usuarioRepository.findById(request.getIdUsuario());
-        if(optional.isPresent()){
-            throw new UsuarioAlreadyExistsException("Ya existe un usuario con el id " +  request.getIdUsuario());
-        }else{
+        try{
+            Optional<Usuario> optional = usuarioRepository.findByEmail(request.getEmail());
+            if(optional.isPresent()){
+                throw new UsuarioAlreadyExistsException("Ya existe un usuario con el id " +  request.getIdUsuario());
+            }
+        }catch(IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
             Usuario usuario = new Usuario();
             usuario.setName(request.getName());
             usuario.setUsername(request.getUsername());
             usuario.setEmail(request.getEmail());
             usuario.setPassword(request.getPassword());
-            usuario.setBirthday(request.getBirthday());
+            //Convertir string a fecha
+            DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate birthday = LocalDate.parse(request.getBirthday(),DATEFORMATTER);
+            usuario.setBirthday(birthday);
             usuario.setState(true);
             String token = UUID.randomUUID().toString();
             usuario.setToken(token);
             usuarioRepository.save(usuario);
             return usuario;
-        }
 	}
 
 	public Usuario updateUsuario(@Valid UsuarioRequest request) {
@@ -63,7 +73,10 @@ public class UsuarioService{
             usuario.setUsername(request.getUsername());
             usuario.setEmail(request.getEmail());
             usuario.setPassword(request.getPassword());
-            usuario.setBirthday(request.getBirthday());
+            //Convertir string a fecha
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate birthday = LocalDate.parse(request.getBirthday(),formatter);
+            usuario.setBirthday(birthday);
             usuario.setState(request.getState());
             String token = UUID.randomUUID().toString();
             usuario.setToken(token);
@@ -90,20 +103,22 @@ public class UsuarioService{
         usuarioRepository.save(user);
     }
 
-    public Usuario login(UsuarioRequest request) {
-        Usuario usuario = usuarioRepository.findByEmail(request.getEmail());
-        if(usuario == null){
+    public Usuario login(loginRequest request) {
+        Optional<Usuario> optional = usuarioRepository.findByEmail(request.getUsername());
+        if(optional.isPresent()){
+            Usuario usuario = optional.get();
+            
+            if(!usuario.getPassword().equals(request.getPassword())){
+                throw new BadRequestException();
+            }
+    
+            //Crear nuevo token
+            usuario.setToken(this.crearToken());
+            usuarioRepository.save(usuario);
+            return usuario;
+        }else{
             throw new BadRequestException();
         }
-
-        if(!usuario.getPassword().equals(request.getPassword())){
-            throw new BadRequestException();
-        }
-
-        //Crear nuevo token
-        usuario.setToken(this.crearToken());
-        usuarioRepository.save(usuario);
-        return usuario;
     }
 
     public String crearToken(){

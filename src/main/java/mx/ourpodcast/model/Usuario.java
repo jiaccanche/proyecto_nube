@@ -1,5 +1,6 @@
 package mx.ourpodcast.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -13,8 +14,8 @@ import javax.persistence.Table;
 @Table(name = "usuario")
 public class Usuario{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Integer idUsuario;
 
     @Column(name = "name")
@@ -30,7 +31,7 @@ public class Usuario{
     private String username;
 
     @Column(name = "birthday")
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     @Column(name = "state")
     private boolean state;
@@ -141,14 +142,14 @@ public class Usuario{
     /**
      * @return the birthday
      */
-    public LocalDateTime getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
     /**
      * @param birthday the birthday to set
      */
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

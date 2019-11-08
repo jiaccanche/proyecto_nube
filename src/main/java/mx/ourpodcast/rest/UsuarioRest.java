@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import mx.ourpodcast.model.MessageInformation;
 import mx.ourpodcast.model.Usuario;
 import mx.ourpodcast.request.UsuarioRequest;
+import mx.ourpodcast.request.loginRequest;
 import mx.ourpodcast.service.UsuarioService;
 
 @RestController
@@ -67,6 +68,13 @@ public class UsuarioRest{
         MessageInformation msg = new MessageInformation();
         msg.setContent("Cierre de sesión");
         return ResponseEntity.ok(msg);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> login(loginRequest request){
+        Usuario user = usuarioService.login(request);
+        return ResponseEntity.ok(user);
+
     }
 
 

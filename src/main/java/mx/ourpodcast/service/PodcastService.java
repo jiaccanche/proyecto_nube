@@ -29,12 +29,7 @@ public class PodcastService {
         return podcasts;
     }
 
-    public Podcast createPodcast(PodcastRequest request) {
-        
-        Optional<Podcast> optional = podcastRepository.findById(request.getidPodcast());
-        if(optional.isPresent()){
-            throw new PodcastAlreadyExistException(request.getidPodcast().toString());
-        } else{
+    public Podcast createPodcast(PodcastRequest request) {        
             Podcast podcast = new Podcast();
             podcast.setCode(request.getCode());
             podcast.setContentUrl(request.getContentUrl());
@@ -42,7 +37,6 @@ public class PodcastService {
 
             podcastRepository.save(podcast);
             return podcast;
-        }
     }
 
     public Podcast updatePodcast(PodcastRequest request) {

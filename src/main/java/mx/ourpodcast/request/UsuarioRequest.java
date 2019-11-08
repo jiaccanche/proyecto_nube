@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class UsuarioRequest {
-    
+        
     private Integer idUsuario;
 
     @NotNull(message = "El nombre es nulo")
@@ -34,7 +34,7 @@ public class UsuarioRequest {
     @NotEmpty(message = "El username es vacío")
     private String username;
 
-    private LocalDateTime birthday;
+    private String birthday;
 
     private boolean state;
 
@@ -143,14 +143,14 @@ public class UsuarioRequest {
     /**
      * @return the birthday
      */
-    public LocalDateTime getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
     /**
      * @param birthday the birthday to set
      */
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
