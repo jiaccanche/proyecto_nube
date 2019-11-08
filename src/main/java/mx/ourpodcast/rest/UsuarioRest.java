@@ -71,7 +71,8 @@ public class UsuarioRest{
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(loginRequest request){
+    public ResponseEntity<Usuario> login(@RequestBody loginRequest request){
+
         Usuario user = usuarioService.login(request);
         return ResponseEntity.ok(user);
 

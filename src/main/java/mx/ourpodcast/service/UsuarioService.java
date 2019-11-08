@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -104,11 +105,22 @@ public class UsuarioService{
     }
 
     public Usuario login(loginRequest request) {
-        Optional<Usuario> optional = usuarioRepository.findByEmail(request.getUsername());
-        if(optional.isPresent()){
-            Usuario usuario = optional.get();
+        Usuario usuario;
+
+        try {
+            usuario = usuarioRepository.findByUsername(request.getUsername()).get();
+            
+  
+        }
+        catch(NoSuchElementException e){
+            System.out.println("funciona");
+
+          throw new BadRequestException();
+        }
+
             
             if(!usuario.getPassword().equals(request.getPassword())){
+                System.out.println("hola");
                 throw new BadRequestException();
             }
     
@@ -116,9 +128,8 @@ public class UsuarioService{
             usuario.setToken(this.crearToken());
             usuarioRepository.save(usuario);
             return usuario;
-        }else{
-            throw new BadRequestException();
-        }
+     
+        
     }
 
     public String crearToken(){

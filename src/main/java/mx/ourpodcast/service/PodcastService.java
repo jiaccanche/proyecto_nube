@@ -40,6 +40,7 @@ public class PodcastService {
     }
 
     public Podcast updatePodcast(PodcastRequest request) {
+        //Agregar validación
         Optional<Podcast> optional = podcastRepository.findById(request.getidPodcast());
         if(optional.isPresent()){
             Podcast podcast = optional.get();
@@ -90,8 +91,19 @@ public class PodcastService {
 
     public ResourceRegion getPodcastContentSplitted(int idPodcast, HttpHeaders headers) throws IOException {
         
-        Optional<Podcast> optional = podcastRepository.findById(idPodcast);
+        podcastRepository.findById(idPodcast).ifPresent(p -> {
+            Podcast podcast = optional.get();
+            String ubicacion = podcast.getContentURL();
+            UrlResource video = new UrlResource("file:" + ubicacion);
+            ResourceRegion region = partirVideo(video, headers);
+
+        });
+
+        if (!optiona.isPresent()) {
+            throw  new Exception();
+    }
         
+            
         if (optional.isPresent()) {
             Podcast podcast = optional.get();
             String ubicacion = podcast.getContentURL();

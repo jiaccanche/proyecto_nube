@@ -66,7 +66,7 @@ public class MessageService{
 	}
 
 	public Message updateMessage(@Valid MessageRequest request) {
-		//Optional<Message> optional = messageRepository.findById(request.getIdMessage());
+		Optional<Message> optional = messageRepository.findById(request.getIdMessage());
         //if(optional.isPresent()){
             Message message = optional.get();
             message.setContent(request.getContent());
