@@ -1,7 +1,5 @@
 package mx.ourpodcast.model;
 
-import java.util.Date;
-
 public class MessageToken {
     private String token;
     private String time;

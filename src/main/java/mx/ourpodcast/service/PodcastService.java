@@ -91,7 +91,7 @@ public class PodcastService {
 
     public ResourceRegion getPodcastContentSplitted(int idPodcast, HttpHeaders headers) throws IOException {
         
-        podcastRepository.findById(idPodcast).ifPresent(p -> {
+        /*podcastRepository.findById(idPodcast).ifPresent(p -> {
             Podcast podcast = optional.get();
             String ubicacion = podcast.getContentURL();
             UrlResource video = new UrlResource("file:" + ubicacion);
@@ -101,8 +101,8 @@ public class PodcastService {
 
         if (!optiona.isPresent()) {
             throw  new Exception();
-    }
-        
+    }*/
+        Optional<Podcast> optional = podcastRepository.findById(idPodcast);
             
         if (optional.isPresent()) {
             Podcast podcast = optional.get();
