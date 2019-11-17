@@ -1,13 +1,11 @@
 package mx.ourpodcast.request;
-
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
 import javax.validation.constraints.Size;
 
 public class UsuarioRequest {
-        
+       
     private Integer idUsuario;
 
     @NotNull(message = "El nombre es nulo")

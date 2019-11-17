@@ -20,7 +20,7 @@ public class MessageRequest {
     @NotNull(message = "La fecha de envío es nula")
     private LocalDateTime sendDate;
 
-    @NotNull(message = "El usuario 1 es nulo")
+    @NotNull(message = "El id del chat es nulo")
     private Integer idChat;
 
     @NotNull(message = "El usuario 2 es nulo")

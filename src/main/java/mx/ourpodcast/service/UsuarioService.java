@@ -1,6 +1,5 @@
 package mx.ourpodcast.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -55,22 +54,18 @@ public class UsuarioService{
 	}
 
 	public Usuario updateUsuario(@Valid UsuarioRequest request) {
-        try{
-
-            Optional<Usuario> optional = usuarioRepository.finByidUsuario(request.getIdUsuario().intValue());
+        if(request.getIdUsuario() == null) throw new BadRequestException("El IdUsuario no puede ser null");
         
-            if(!optional.isPresent()){
-            throw new UsuarioNotFoundException(
-                "No existe un usuario con el id " + request.getIdUsuario()
-                );
-            }
-            Usuario usuario = new Usuario();
-            this.changeRequestUsuarioTUsuario(request, usuario);
-            return usuario;
-
-        }catch(IllegalArgumentException e){
-           throw new BadRequestException();
+        Optional<Usuario> optional = usuarioRepository.findById(request.getIdUsuario());
+        
+        if(!optional.isPresent()){
+        throw new UsuarioNotFoundException(
+            "No existe un usuario con el identificador " + request.getIdUsuario()
+            );
         }
+        Usuario usuario = optional.get();
+        this.changeRequestUsuarioTUsuario(request, usuario);
+        return usuario;
         
 	}
 
@@ -94,7 +89,7 @@ public class UsuarioService{
         }
 
         if(!usuario.getPassword().equals(request.getPassword())){
-            throw new BadRequestException();
+            throw new BadLoginException("El usuario/contraseña son incorrectos.");
         }
     
         usuario.setToken(this.crearToken());
