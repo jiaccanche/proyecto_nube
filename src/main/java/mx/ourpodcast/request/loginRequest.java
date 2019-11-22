@@ -1,7 +1,11 @@
 package mx.ourpodcast.request;
 
+import javax.validation.constraints.NotNull;
+
 public class loginRequest{
+    @NotNull(message = "No puede ser nulo")
     private String username;
+    @NotNull(message = "No puede ser nulo")
     private String password;
 
     public loginRequest(){}

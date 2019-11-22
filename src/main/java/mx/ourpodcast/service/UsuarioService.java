@@ -125,8 +125,7 @@ public class UsuarioService{
             usuario.setEmail(request.getEmail());
             usuario.setPassword(request.getPassword());
             //Convertir string a fecha
-            DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate birthday = LocalDate.parse(request.getBirthday(),DATEFORMATTER);
+            LocalDate birthday =  this.convertStringTLocalDate(request.getBirthday());
             usuario.setBirthday(birthday);
     }
 

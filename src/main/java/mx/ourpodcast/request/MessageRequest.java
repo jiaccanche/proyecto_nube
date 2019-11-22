@@ -18,12 +18,12 @@ public class MessageRequest {
     private String content;
 
     @NotNull(message = "La fecha de envío es nula")
-    private LocalDateTime sendDate;
+    private String sendDate;
 
     @NotNull(message = "El id del chat es nulo")
     private Integer idChat;
 
-    @NotNull(message = "El usuario 2 es nulo")
+    @NotNull(message = "El usuario es nulo")
     private Integer idUsuario;
 
     public MessageRequest(){}
@@ -45,12 +45,17 @@ public class MessageRequest {
         this.content = content;
     }
 
-    public LocalDateTime getSendDate() {
-        return this.sendDate;
-    }
-
-    public void setSendDate(LocalDateTime sendDate) {
+    /**
+     * @param sendDate the sendDate to set
+     */
+    public void setSendDate(String sendDate) {
         this.sendDate = sendDate;
+    }
+    /**
+     * @return the sendDate
+     */
+    public String getSendDate() {
+        return sendDate;
     }
 
     /**

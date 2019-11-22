@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +39,7 @@ public class UsuarioRest{
     }
 
     @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<Usuario> getUsuarioById(@PathVariable Integer idUsuario){
+    public ResponseEntity<Usuario> getUsuarioById(@PathVariable @NotBlank @NotNull Integer idUsuario){
         Usuario usuario = usuarioService.getUsuarioById(idUsuario);
         return ResponseEntity.ok().body(usuario);
     }
@@ -55,7 +57,7 @@ public class UsuarioRest{
     }
 
     @DeleteMapping("/usuario/{idUsuario}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer idUsuario){
+    public ResponseEntity<Void> deleteUsuario(@PathVariable @NotBlank @NotNull Integer idUsuario){
         usuarioService.deleteUsuarioById(idUsuario);
         return ResponseEntity.ok().build();
     }
@@ -64,6 +66,7 @@ public class UsuarioRest{
     public ResponseEntity<MessageInformation> logout(ServletRequest request){
         HttpServletRequest servRequest = (HttpServletRequest) request;
         String token = servRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        
         usuarioService.revokeToken(token);
         MessageInformation msg = new MessageInformation();
         msg.setContent("Cierre de sesión");
@@ -71,7 +74,7 @@ public class UsuarioRest{
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(@RequestBody loginRequest request){
+    public ResponseEntity<Usuario> login(@Valid @RequestBody loginRequest request){
 
         Usuario user = usuarioService.login(request);
         return ResponseEntity.ok(user);
