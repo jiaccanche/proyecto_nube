@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.ourpodcast.model.Chat;
+import mx.ourpodcast.model.Message;
 import mx.ourpodcast.request.ChatRequest;
 import mx.ourpodcast.service.ChatService;
 
@@ -25,27 +26,15 @@ public class ChatRest{
     @Autowired
     private ChatService chatService;
 
-    @GetMapping("/chat")
-    public ResponseEntity<List<Chat>> getAllChats(){
-        List<Chat> chats = chatService.getAllChats();
-        return ResponseEntity.ok().body(chats);
-    }
-
     @GetMapping("/chat/{idChat}")
     public ResponseEntity<Chat> getChatById(@PathVariable Integer idChat){
         Chat chat = chatService.getChatById(idChat);
-        return ResponseEntity.ok().body(chat);
+        return ResponseEntity.ok(chat);
     }
 
     @PostMapping("/chat")
     public ResponseEntity<Chat> createChat(@Valid @RequestBody ChatRequest request){
         Chat chat = chatService.createChat(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(chat);
-    }
-
-    @PutMapping("/chat")
-    public ResponseEntity<Chat> updateChat(@Valid @RequestBody ChatRequest request){
-        Chat chat = chatService.updateChat(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(chat);
     }
 
@@ -58,6 +47,8 @@ public class ChatRest{
     @GetMapping("/chat/usuario/{idUsuario}")
     public ResponseEntity<List<Chat>> getAllChatsByUsuario(@PathVariable Integer idUsuario){
         List<Chat> chats = chatService.getAllChatsByUsuario(idUsuario);
-        return ResponseEntity.ok().body(chats);
+        return ResponseEntity.ok(chats);
     }
+
+   
 }
