@@ -31,9 +31,6 @@ public class Chat{
     @JoinColumn(name = "usuario2")
     private Usuario usuario2;
 
-    //@OneToMany(mappedBy = "chat", targetEntity = Message.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //private Set<Message> messages;
-
 
     public Chat(){}
 
@@ -70,17 +67,4 @@ public class Chat{
         this.usuario2 = usuario2;
     }
 
-    /**
-     * return the messages
-     
-    public Set<Message> getMessages() {
-        return messages;
-    }
-
-    /**
-     param messages the messages to set
-     
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
-    }*/
 }
