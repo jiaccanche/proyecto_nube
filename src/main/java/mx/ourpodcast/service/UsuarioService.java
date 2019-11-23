@@ -37,32 +37,39 @@ public class UsuarioService{
 	}
 
 	public Usuario getUsuarioById(Integer idUsuario) {
-        Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
+       try{ Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
         if(optional.isPresent()){
             return optional.get();
         }else{
             throw new UsuarioNotFoundException("No existe un usuario con un indetificador " + idUsuario);
         }
+
+        }catch(NullPointerException | NoSuchElementException e){
+            throw new UsuarioNotFoundException(
+                "No existe un usuario con identificador:" + idUsuario +", o no la petición es incorrecta.");
+        }
 	}
 
 	public Usuario createUsuario(@Valid UsuarioRequest request) {
-           
-        Optional<Usuario> optional = usuarioRepository.findByEmail(request.getEmail());
-        if(optional.isPresent()){
+        try{     
+            Optional<Usuario> optional = usuarioRepository.findByEmail(request.getEmail());
+            if(optional.isPresent()){
             throw new UsuarioAlreadyExistsException(
                 "Ya existe un usuario con ese email " +  request.getEmail()
                 );
-        }
+            }
 
         Usuario usuario = new Usuario();
         this.changeRequestUsuarioToUsuario(request,usuario);
         usuarioRepository.save(usuario);
         return usuario;
+        }catch(NullPointerException | NoSuchElementException e){
+        throw new BadRequestException("No se realizó la petición de manera correcta.");
+        }
 	}
 
 	public Usuario updateUsuario(@Valid UsuarioRequest request) {
-        if(request.getIdUsuario() == null) throw new BadRequestException("El IdUsuario no puede ser null");
-        
+       try{
         Optional<Usuario> optional = usuarioRepository.findById(request.getIdUsuario());
         
         if(!optional.isPresent()){
@@ -73,15 +80,23 @@ public class UsuarioService{
         Usuario usuario = optional.get();
         this.changeRequestUsuarioToUsuario(request, usuario);
         return usuario;
-        
+        }catch(NullPointerException | NoSuchElementException e){
+        throw new UsuarioNotFoundException(
+            "El indetificador no puede ser null, o no la petición es incorrecta.");
+        }
 	}
 
 	public void deleteUsuarioById(Integer idUsuario) {
+      try{
         Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
         if(optional.isPresent()){
             usuarioRepository.delete(optional.get());
         }else{
             throw new UsuarioNotFoundException("No existe un usuario con el identificado " + idUsuario);
+        }
+     }catch(NullPointerException | NoSuchElementException e){
+        throw new UsuarioNotFoundException(
+            "El identificador no puede ser null, o no la petición es incorrecta.");
         }
     }
 

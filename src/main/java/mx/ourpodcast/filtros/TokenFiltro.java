@@ -62,15 +62,17 @@ public class TokenFiltro extends GenericFilterBean {
 	}
 
 	public boolean validateUserParameters(Usuario user){
-		boolean  result = false;
+		
 		try{
-		result = (user != null 
+			boolean  result = false;
+			result = (user != null 
 			&& user.getIntentoLogin() < 3 
 			&& user.getTiempoIniToken() != null);
+			return result;
 			
 		}catch(NullPointerException e){
-			return result;
+			return false;
 		}
-			return result;
+			
 	}
 }
