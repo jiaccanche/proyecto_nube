@@ -1,4 +1,5 @@
 package mx.ourpodcast.filtros;
+
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -6,6 +7,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +24,7 @@ import mx.ourpodcast.repository.UsuarioRepository;
 public class TokenFiltro extends GenericFilterBean {
 
 	private final UsuarioRepository usuarioRepo;
+	private final int SECONDS_ONE_MINUTE = 60;
 
 	public TokenFiltro(UsuarioRepository usuarioRepository) {
 		this.usuarioRepo = usuarioRepository;
@@ -29,37 +33,44 @@ public class TokenFiltro extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
-			HttpServletRequest servRequest = (HttpServletRequest) request;
-			String token = servRequest.getHeader(HttpHeaders.AUTHORIZATION);
+		
+		HttpServletRequest servRequest = (HttpServletRequest) request;
+			
+		String token = servRequest.getHeader(HttpHeaders.AUTHORIZATION);
+		Usuario user = usuarioRepo.findByToken(token);
 
-			Usuario user = usuarioRepo.findByToken(token);
-
-			if (user != null ) {
-			    Authentication auth = new UsernamePasswordAuthenticationToken(user, null, null);
-	        	SecurityContextHolder.getContext().setAuthentication(auth);
+		boolean validate_credentials = this.validateUserParameters(user) && this.validateToken(user);
+		if (validate_credentials) {
+			Authentication auth = new UsernamePasswordAuthenticationToken(user, null, null);
+	        SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 
-			/*
-			Usuario usuarioQueLLamo = 
-            	((Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-			*/
-
-			// Importante
-			chain.doFilter(request, response);
+		chain.doFilter(request, response);
 	}   
 
-	/*public boolean validateToken(Usuario user){
-		int time_permitted = 1;
-		Long diffTime =  this.restarDatetime(user.getTime_token(), new Date());
-		System.out.println(diffTime);
-		if(diffTime > (long) time_permitted || user.getToken() == null) return false;
+	public boolean validateToken(Usuario user){
+		int time_permitted = 500;
+		Long diffTime =  this.restarDatetime(user.getTiempoIniToken(), LocalDateTime.now() );
+		return !(diffTime > (long) time_permitted || user.getToken() == null);
 
-		return true;
+	}
+	public long restarDatetime(LocalDateTime dateTimeToken, LocalDateTime dateTimeRequest){
+		Duration duration = Duration.between(dateTimeToken, dateTimeRequest);
+		long seconds = duration.getSeconds();
+		long minutes = seconds/SECONDS_ONE_MINUTE;
+		return minutes;
+	}
 
-	}*/
-	/*public Long restarDatetime(Date dateTimeToken, Date dateTimeRequest){
-
-		long diffInMillies = dateTimeRequest.getTime() - dateTimeToken.getTime();
-		return diffInMillies / (60 * 1000);
-	  }*/
+	public boolean validateUserParameters(Usuario user){
+		boolean  result = false;
+		try{
+		result = (user != null 
+			&& user.getIntentoLogin() < 3 
+			&& user.getTiempoIniToken() != null);
+			
+		}catch(NullPointerException e){
+			return result;
+		}
+			return result;
+	}
 }

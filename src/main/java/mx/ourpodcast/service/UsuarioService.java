@@ -1,12 +1,14 @@
 package mx.ourpodcast.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import mx.ourpodcast.exceptions.BadLoginException;
 import mx.ourpodcast.exceptions.BadRequestException;
 import mx.ourpodcast.exceptions.UsuarioAlreadyExistsException;
+import mx.ourpodcast.exceptions.UsuarioBloqueado;
 import mx.ourpodcast.exceptions.UsuarioNotFoundException;
 import mx.ourpodcast.model.Usuario;
 import mx.ourpodcast.repository.UsuarioRepository;
@@ -26,6 +29,8 @@ public class UsuarioService{
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    private final Integer LimiteIntentosLogin = new Integer(3);
 
 	public List<Usuario> getAllUsuarios() {
 		return usuarioRepository.findAll();
@@ -44,11 +49,13 @@ public class UsuarioService{
            
         Optional<Usuario> optional = usuarioRepository.findByEmail(request.getEmail());
         if(optional.isPresent()){
-            throw new UsuarioAlreadyExistsException("Ya existe un usuario con ese email " +  request.getEmail());
+            throw new UsuarioAlreadyExistsException(
+                "Ya existe un usuario con ese email " +  request.getEmail()
+                );
         }
 
         Usuario usuario = new Usuario();
-        this.changeRequestUsuarioTUsuario(request,usuario);
+        this.changeRequestUsuarioToUsuario(request,usuario);
         usuarioRepository.save(usuario);
         return usuario;
 	}
@@ -64,7 +71,7 @@ public class UsuarioService{
             );
         }
         Usuario usuario = optional.get();
-        this.changeRequestUsuarioTUsuario(request, usuario);
+        this.changeRequestUsuarioToUsuario(request, usuario);
         return usuario;
         
 	}
@@ -89,10 +96,19 @@ public class UsuarioService{
         }
 
         if(!usuario.getPassword().equals(request.getPassword())){
+            
+            Integer intento = (usuario.getIntentoLogin() == null) ? 0 : usuario.getIntentoLogin();
+            usuario.setIntentoLogin(intento + 1);
+            usuarioRepository.save(usuario);
+            boolean validar_intentos = usuario.getIntentoLogin().equals(LimiteIntentosLogin);
+            if(validar_intentos) throw new UsuarioBloqueado();
+            
             throw new BadLoginException("El usuario/contraseña son incorrectos.");
         }
     
         usuario.setToken(this.crearToken());
+        LocalDateTime tiempoIniToken = LocalDateTime.now();
+        usuario.setTiempoIniToken(tiempoIniToken);
         usuarioRepository.save(usuario);
         return usuario;
      
@@ -111,11 +127,13 @@ public class UsuarioService{
         return localDate;
     }
 
-    public void changeRequestUsuarioTUsuario(UsuarioRequest request, Usuario usuario){
+    public void changeRequestUsuarioToUsuario(UsuarioRequest request, Usuario usuario){
             //Validar si es necesario crear un token
             if(usuario.getIdUsuario() == null){
                 usuario.setState(true);
                 usuario.setToken(this.crearToken());
+                LocalDateTime tiempoIniToken = LocalDateTime.now();
+                usuario.setTiempoIniToken(tiempoIniToken);
             }else{
                 usuario.setState(request.getState());
             }
@@ -132,6 +150,7 @@ public class UsuarioService{
     public void revokeToken (String token){
         Usuario user = (Usuario)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user.setToken(null);
+        user.setTiempoIniToken(null);
         usuarioRepository.save(user);
     }
 
