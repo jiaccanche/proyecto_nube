@@ -3,6 +3,7 @@ package mx.ourpodcast.rest;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,14 @@ public class MessageRest {
      */
     public ResponseEntity<List<Message>> obtenerMessagebyChat(@PathVariable @NotBlank @NotNull @NumberFormat int numchat){
         List<Message> msjs = messageservice.getMessagesByChat(numchat);
+        return ResponseEntity.status(HttpStatus.OK).body(msjs);   
+    }
+
+    @GetMapping("message/{chat}/{content}")
+    public ResponseEntity<List<Message>> obtenerMessagesbyContent(
+        @PathVariable("chat") Integer chat,@PathVariable("content") String content){
+        
+        List<Message> msjs = messageservice.getMessagebyContent(content, chat);
         return ResponseEntity.status(HttpStatus.OK).body(msjs);   
     }
 

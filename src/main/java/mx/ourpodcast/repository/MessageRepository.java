@@ -2,6 +2,7 @@ package mx.ourpodcast.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,6 @@ import mx.ourpodcast.model.Message;
 public interface MessageRepository extends JpaRepository<Message, Integer>{
 
 	List<Message> findAllByChat(Chat chat);
+	List<Message> findByContentContaining(String content);
 
 }
