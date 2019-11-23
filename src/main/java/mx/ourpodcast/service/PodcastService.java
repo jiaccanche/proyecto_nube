@@ -12,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.stereotype.Service;
 
-import mx.ourpodcast.exceptions.PodcastAlreadyExistException;
 import mx.ourpodcast.exceptions.PodcastNotFoundException;
 import mx.ourpodcast.model.Podcast;
 import mx.ourpodcast.repository.PodcastRepository;

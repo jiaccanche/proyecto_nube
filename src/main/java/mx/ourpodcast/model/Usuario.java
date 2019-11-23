@@ -39,8 +39,8 @@ public class Usuario{
     @Column(name = "token")
     private String token;
 
-    @Column(name = "intengoslogin")
-    private Integer intentoLogin;
+    @Column(name = "intengoslogin", columnDefinition = "int default 0")
+    private Integer intentoLogin = 0;
     
     @Column(name = "tiempoIniToken")
     private LocalDateTime tiempoIniToken;
