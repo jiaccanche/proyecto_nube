@@ -13,6 +13,6 @@ import mx.ourpodcast.model.Message;
 public interface MessageRepository extends JpaRepository<Message, Integer>{
 
 	List<Message> findAllByChat(Chat chat);
-	List<Message> findByContentContaining(String content);
+	List<Message> findByContentContainingAndChat(String content,Chat chat);
 
 }

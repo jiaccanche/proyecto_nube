@@ -29,7 +29,7 @@ public class MessageService{
 
     public List<Message> getMessagebyContent(String content,Integer chat){
         Chat chat_obj = chatService.getChatById(chat);
-        List<Message> mensajes = messageRepository.findByContentContaining(content);
+        List<Message> mensajes = messageRepository.findByContentContainingAndChat(content,chat_obj);
         return mensajes;
     }
 
