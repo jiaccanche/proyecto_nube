@@ -9,7 +9,7 @@ public class ChatRequest {
     private Integer idChat;
 
     @NotNull(message = "La fecha de inicio es nula")
-    private LocalDateTime initDate;
+    private String initDate;
 
     @NotNull(message = "El usuario1 es nulo")
     private Integer idUsuario1;
@@ -28,16 +28,16 @@ public class ChatRequest {
         this.idChat = idChat;
     }
 
-    public LocalDateTime getInitDate() {
+    public String getInitDate() {
         return this.initDate;
     }
 
-    public void setInitDate(LocalDateTime initDate) {
+    public void setInitDate(String initDate) {
         this.initDate = initDate;
     }
 
     public Integer getIdUsuario1() {
-        return this.idUsuario1;
+        return idUsuario1;
     }
 
     public void setIdUsuario1(Integer idUsuario1) {
@@ -45,7 +45,7 @@ public class ChatRequest {
     }
 
     public Integer getIdUsuario2() {
-        return this.idUsuario2;
+        return idUsuario2;
     }
 
     public void setIdUsuario2(Integer idUsuario2) {

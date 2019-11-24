@@ -1,15 +1,21 @@
 package mx.ourpodcast.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import mx.ourpodcast.exceptions.ChatAlreadyExistsException;
 import mx.ourpodcast.exceptions.ChatNotFoundException;
+import mx.ourpodcast.exceptions.ChatNotValidException;
+import mx.ourpodcast.exceptions.ChatUnauthorized;
 import mx.ourpodcast.model.Chat;
 import mx.ourpodcast.model.Usuario;
 import mx.ourpodcast.repository.ChatRepository;
@@ -21,75 +27,104 @@ public class ChatService{
     @Autowired
     private ChatRepository chatRepository;
 
-	public List<Chat> getAllChats() {
-		return chatRepository.findAll();
-	}
+    @Autowired
+    private UsuarioService service;
 
 	public Chat getChatById(Integer idChat) {
-        Optional<Chat> optional = chatRepository.findById(idChat);
-        if (optional.isPresent()) {
-            return optional.get();
-        }else{
+        try{
+            Optional<Chat> optional = chatRepository.findById(idChat);
+            Chat chat = optional.get();
+            Integer user1 = chat.getUsuario1().getIdUsuario();
+            Integer user2 = chat.getUsuario2().getIdUsuario();
+
+            if(userHasPermission(user1) || userHasPermission(user2) ){
+                return optional.get();
+            }else{
+                throw new ChatUnauthorized("El usuario no tiene permiso para ver el chat de los usuarios " + user1 + " y " + user2);
+            }
+
+        }catch(NoSuchElementException | NullPointerException npe){
             throw new ChatNotFoundException("No existe un chat con id " + idChat);
         }
 	}
 
 	public Chat createChat(@Valid ChatRequest request) {
-        //Optional<Chat> optional = chatRepository.findById(request.getIdChat());
-		//if (optional.isPresent()) {
-            //throw new ChatAlreadyExistsException("Ya existe un chat con id " + request.getIdChat());
-        //}else{
-            Chat chat = new Chat();
-            chat.setInitDate(request.getInitDate());
+        if(request.getIdChat() != null){
+            throw new ChatAlreadyExistsException("Ya existe un chat con id " + request.getIdChat());
 
-            UsuarioService usuarioService = new UsuarioService();
-            Usuario usuario1 = usuarioService.getUsuarioById(request.getIdUsuario1());
-            chat.setUsuario1(usuario1);
+        }
+        Usuario user1 = service.getUsuarioById(request.getIdUsuario1());
+        Usuario user2 = service.getUsuarioById(request.getIdUsuario2());
 
-            Usuario usuario2 = usuarioService.getUsuarioById(request.getIdUsuario2());
-            chat.setUsuario2(usuario2);
+        if(!userHasPermission(user1.getIdUsuario()) && !userHasPermission(user2.getIdUsuario())){
+            throw new ChatUnauthorized("El usuario no tiene permiso para crear un chat entre los usuarios " + user1.getIdUsuario() + " y " + user2.getIdUsuario());
+        }
 
-            chatRepository.save(chat);
-            return chat;
-        //}
-	}
+        if(user1.getIdUsuario() == user2.getIdUsuario()){
+            throw new ChatNotValidException("No puede crear un chat con el mismo usuario");
+        }
+        
+        if(chatOfUsersExist(user1, user2)){
+            throw new ChatAlreadyExistsException("Ya existe un chat para los usuarios dados");
+        }
 
-	public Chat updateChat(@Valid ChatRequest request) {
-		Optional<Chat> optional = chatRepository.findById(request.getIdChat());
-		//if (optional.isPresent()) {
-            Chat chat = optional.get();
-            chat.setInitDate(request.getInitDate());
+        Chat chat = new Chat();
 
-            UsuarioService usuarioService = new UsuarioService();
-            Usuario usuario1 = usuarioService.getUsuarioById(request.getIdUsuario1());
-            chat.setUsuario1(usuario1);
+        DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate initDate = LocalDate.parse(request.getInitDate(),DATEFORMATTER);
+        chat.setInitDate(initDate);
+        
+        chat.setUsuario1(user1);
 
-            Usuario usuario2 = usuarioService.getUsuarioById(request.getIdUsuario2());
-            chat.setUsuario2(usuario2);
+        chat.setUsuario2(user2);
 
-            chatRepository.save(chat);
-            return chat;
-        //}else{
-         //   throw new ChatNotFoundException("No existe un chat con id " + request.getIdChat());
-        //}
-	}
-
+        return chatRepository.save(chat);
+        
+    }
+    
 	public void deleteChat(Integer idChat) {
-		Optional<Chat> optional = chatRepository.findById(idChat);
-        if (optional.isPresent()) {
-            chatRepository.delete(optional.get());
-        }else{
+        try{
+            Optional<Chat> optional = chatRepository.findById(idChat);
+            Chat chat = optional.get();
+            Integer user1 = chat.getUsuario1().getIdUsuario();
+            Integer user2 = chat.getUsuario2().getIdUsuario();
+
+            if(!userHasPermission(user1) && !userHasPermission(user2) ){
+                throw new ChatUnauthorized("El usuario no tiene permiso para eliminar el chat de los usuarios " + user1 + " y " + user2);
+            }
+            chatRepository.delete(chat);
+        }catch(NullPointerException |NoSuchElementException npe){
             throw new ChatNotFoundException("No existe un chat con id " + idChat);
         }
 	}
 
 	public List<Chat> getAllChatsByUsuario(Integer idUsuario) {
-        UsuarioService usuarioService = new UsuarioService();
-        Usuario usuario = usuarioService.getUsuarioById(idUsuario);
+       
+        Usuario usuario = service.getUsuarioById(idUsuario);
+        if(userHasPermission(idUsuario)){
+            List<Chat> chats = chatRepository.findAllByUsuario1(usuario);
+            chats.addAll(chatRepository.findAllByUsuario2(usuario));
+            return chats;
+        }else{
+            throw new ChatUnauthorized("El usuario no tiene permiso para ver el chat del usuario " + idUsuario);
+        }
+    }
 
-        List<Chat> chats = chatRepository.findAllByUsuario1(usuario);
-        chats.addAll(chatRepository.findAllByUsuario2(usuario));
-        return chats;
-	}
+    private boolean userHasPermission(Integer idUsuario){
+        Usuario user = (Usuario)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return idUsuario == user.getIdUsuario();
+    }
+
+
+    private boolean chatOfUsersExist(Usuario user1, Usuario user2){
+        
+        try{
+            Optional<Chat> chat = chatRepository.findByUsuario1AndUsuario2(user1, user2);
+            Optional<Chat> chat2 = chatRepository.findByUsuario1AndUsuario2(user2, user1);
+            return (chat.isPresent() || chat2.isPresent());
+        }catch(NullPointerException | NoSuchElementException npe){
+            return false;
+        }
+    }
 
 }

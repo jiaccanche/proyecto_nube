@@ -1,6 +1,6 @@
 package mx.ourpodcast.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,19 +17,20 @@ public class Chat{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id_chat")
     private Integer idChat;
 
-    @Column(name = "initDate")
-    private LocalDateTime initDate;
+    @Column(name = "init_date")
+    private LocalDate initDate;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "usuario1")
     private Usuario usuario1;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "usuario2")
     private Usuario usuario2;
+
 
     public Chat(){}
 
@@ -42,11 +43,11 @@ public class Chat{
         this.idChat = idChat;
     }
 
-    public LocalDateTime getInitDate() {
+    public LocalDate getInitDate() {
         return this.initDate;
     }
 
-    public void setInitDate(LocalDateTime initDate) {
+    public void setInitDate(LocalDate initDate) {
         this.initDate = initDate;
     }
 
