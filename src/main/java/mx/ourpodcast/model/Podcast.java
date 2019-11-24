@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "podcast")
@@ -18,7 +19,7 @@ public class Podcast{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id_podcast")
     private Integer idPodcast;
 
     @Column(name = "title")
@@ -32,7 +33,7 @@ public class Podcast{
    
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario", referencedColumnName="id_usuario", nullable = false)
-    @JsonIgnore 
+    @JsonIgnore
     private Usuario usuario;
 
     public Usuario getUsuario() {
