@@ -25,17 +25,6 @@ public class CommentRest{
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/comment")
-    public ResponseEntity<List<Comment>> getAllComments(){
-        List<Comment> comments = commentService.getAllComments();
-        return ResponseEntity.ok().body(comments);
-    }
-
-    @GetMapping("/comment/{idComment}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable int idComment){
-        Comment comment = commentService.getCommentById(idComment);
-        return ResponseEntity.ok().body(comment);
-    }
 
     @PostMapping("/comment")
     public ResponseEntity<Comment> createComment(@Valid @RequestBody CommentRequest request){
@@ -43,19 +32,7 @@ public class CommentRest{
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
-    @PutMapping("/comment")
-    public ResponseEntity<Comment> updateComment(@Valid @RequestBody CommentRequest request){
-        Comment comment = commentService.updateComment(request);
-        return ResponseEntity.ok().body(comment);
-    }
-
-    @DeleteMapping("/comment/{idComment}")
-    public ResponseEntity<Void> deleteComment(@PathVariable int idComment){
-        commentService.deleteComment(idComment);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("comment/streaming/{idStreaming}")
+    @GetMapping("comments/streaming/{idStreaming}")
     public ResponseEntity<List<Comment>> getCommentsByContent(@PathVariable int idStreaming){
         List<Comment> comments = commentService.getAllCommentsByStreaming(idStreaming);
         return ResponseEntity.ok().body(comments);
