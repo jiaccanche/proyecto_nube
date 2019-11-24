@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import mx.ourpodcast.exceptions.ChatAlreadyExistsException;
 import mx.ourpodcast.exceptions.ChatNotFoundException;
 import mx.ourpodcast.exceptions.ChatNotValidException;
-import mx.ourpodcast.exceptions.ChatUnauthorized;
+import mx.ourpodcast.exceptions.ChatUnauthorizedException;
 import mx.ourpodcast.model.Chat;
 import mx.ourpodcast.model.Usuario;
 import mx.ourpodcast.repository.ChatRepository;
@@ -40,7 +40,7 @@ public class ChatService{
             if(userHasPermission(user1) || userHasPermission(user2) ){
                 return optional.get();
             }else{
-                throw new ChatUnauthorized("El usuario no tiene permiso para ver el chat de los usuarios " + user1 + " y " + user2);
+                throw new ChatUnauthorizedException("El usuario no tiene permiso para ver el chat de los usuarios " + user1 + " y " + user2);
             }
 
         }catch(NoSuchElementException | NullPointerException npe){
@@ -57,7 +57,7 @@ public class ChatService{
         Usuario user2 = service.getUsuarioById(request.getIdUsuario2());
 
         if(!userHasPermission(user1.getIdUsuario()) && !userHasPermission(user2.getIdUsuario())){
-            throw new ChatUnauthorized("El usuario no tiene permiso para crear un chat entre los usuarios " + user1.getIdUsuario() + " y " + user2.getIdUsuario());
+            throw new ChatUnauthorizedException("El usuario no tiene permiso para crear un chat entre los usuarios " + user1.getIdUsuario() + " y " + user2.getIdUsuario());
         }
 
         if(user1.getIdUsuario() == user2.getIdUsuario()){
@@ -90,7 +90,7 @@ public class ChatService{
             Integer user2 = chat.getUsuario2().getIdUsuario();
 
             if(!userHasPermission(user1) && !userHasPermission(user2) ){
-                throw new ChatUnauthorized("El usuario no tiene permiso para eliminar el chat de los usuarios " + user1 + " y " + user2);
+                throw new ChatUnauthorizedException("El usuario no tiene permiso para eliminar el chat de los usuarios " + user1 + " y " + user2);
             }
             chatRepository.delete(chat);
         }catch(NullPointerException |NoSuchElementException npe){
@@ -106,7 +106,7 @@ public class ChatService{
             chats.addAll(chatRepository.findAllByUsuario2(usuario));
             return chats;
         }else{
-            throw new ChatUnauthorized("El usuario no tiene permiso para ver el chat del usuario " + idUsuario);
+            throw new ChatUnauthorizedException("El usuario no tiene permiso para ver el chat del usuario " + idUsuario);
         }
     }
 
