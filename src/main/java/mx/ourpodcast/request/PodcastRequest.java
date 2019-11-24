@@ -12,34 +12,17 @@ public class PodcastRequest{
     @NotEmpty(message = "El título es vacío")
     private String title;
 
-    @NotNull(message = "El código es nulo")
-    @Size(min = 5, max = 5, message 
-      = "El codigo debe tener 5 caracteres de longitud")
-    @NotEmpty(message = "El código es vacío")
-    private String code;
-
     @NotNull(message = "El contenido es nulo")
     @NotEmpty(message = "El contenido es vacío")
     private String contentUrl;
 
-    private Integer idPodcast;
-
+    
     public PodcastRequest(){}
     
 
     /**
      * @return the code
      */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * @param code the code to set
-     */
-    public void setCode(String code) {
-        this.code = code;
-    }
 
 
     /**
@@ -70,19 +53,6 @@ public class PodcastRequest{
         this.contentUrl = contentUrl;
     }
 
-    /**
-     * @return the idPodcast
-     */
-    public Integer getidPodcast() {
-        return idPodcast;
-    }
-    
-    /**
-     * @param idPodcast the idPodcast to set
-     */
-    public void setidPodcast(Integer idPodcast) {
-        this.idPodcast = idPodcast;
-    }
     
 
 }

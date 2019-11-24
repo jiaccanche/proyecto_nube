@@ -32,33 +32,33 @@ public class PodcastRest{
     @Autowired
     private PodcastService podcastService;
 
-    @GetMapping("/podcast")
-    public ResponseEntity<List<Podcast>> getAllAlumnos(){
-        List<Podcast> podcasts = podcastService.getAllPodcast();
+    @GetMapping("/podcasts")
+    public ResponseEntity<List<Podcast>> getAllPodcast(@RequestHeader(value="Authorization") String token){
+        List<Podcast> podcasts = podcastService.getAllPodcast(token);
         return ResponseEntity.ok().body(podcasts);
     }
 
-    @GetMapping("/podcast/{idPodcast}")
-    public ResponseEntity<Podcast> getPodcastById(@PathVariable int idPodcast){
-        Podcast podcast = podcastService.getPodcastById(idPodcast);
+    @GetMapping("/podcast/{code}")
+    public ResponseEntity<Podcast> getPodcastById(@RequestHeader(value="Authorization") String token, @PathVariable String code){
+        Podcast podcast = podcastService.getPodcastByCode(token,code);
         return ResponseEntity.ok().body(podcast);
     }
 
     @PostMapping("/podcast")
-    public ResponseEntity<Podcast> createPodcast(@Valid @RequestBody PodcastRequest body){
-        Podcast podcast = podcastService.createPodcast(body);
+    public ResponseEntity<Podcast> createPodcast(@RequestHeader(value="Authorization") String token, @Valid @RequestBody PodcastRequest body){
+        Podcast podcast = podcastService.createPodcast(body, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(podcast);
     }
 
-    @PutMapping("/podcast")
-    public ResponseEntity<Podcast> updatePodcast(@Valid @RequestBody PodcastRequest body){
-        Podcast podcast = podcastService.updatePodcast(body);
+    @PutMapping("/podcast/{code}")
+    public ResponseEntity<Podcast> updatePodcast(@PathVariable String code, @RequestHeader(value="Authorization") String token, @Valid @RequestBody PodcastRequest body){
+        Podcast podcast = podcastService.updatePodcast(code, body, token);
         return ResponseEntity.ok().body(podcast);
     }
 
-    @DeleteMapping("/podcast/{idPodcast}")
-    public ResponseEntity<Void> deletePodcast(@PathVariable int idPodcast){
-        podcastService.deletePodcast(idPodcast);
+    @DeleteMapping("/podcast/delete/{code}")
+    public ResponseEntity<Void> deletePodcast(@PathVariable String code){
+        podcastService.deletePodcast(code);
         return ResponseEntity.ok().build();
     }
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.ourpodcast.model.Streaming;
@@ -27,32 +28,32 @@ public class StreamingRest{
     private StreamingService streamingService;
 
     @GetMapping("/streaming")
-    public ResponseEntity<List<Streaming>> getAllStreamings(){
-        List<Streaming> streamings = streamingService.getAllStreamings();
+    public ResponseEntity<List<Streaming>> getAllStreamings(@RequestHeader(value="Authorization") String token){
+        List<Streaming> streamings = streamingService.getAllStreamings(token);
         return ResponseEntity.ok().body(streamings);
     }
 
-    @GetMapping("/streaming/{idStreaming}")
-    public ResponseEntity<Streaming> getStreamingById(@PathVariable Integer idStreaming){
-        Streaming streaming = streamingService.getStreamingById(idStreaming);
+    @GetMapping("/streaming/{code}")
+    public ResponseEntity<Streaming> getStreamingById(@PathVariable String code){
+        Streaming streaming = streamingService.getStreamingByCode(code);
         return ResponseEntity.ok().body(streaming);
     }
 
     @PostMapping("/streaming")
-    public ResponseEntity<Streaming> createStreaming(@Valid @RequestBody StreamingRequest request){
-        Streaming streaming = streamingService.createStreaming(request);
+    public ResponseEntity<Streaming> createStreaming(@RequestHeader(value="Authorization") String token, @Valid @RequestBody StreamingRequest request){
+        Streaming streaming = streamingService.createStreaming(token, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(streaming);
     }
 
-    @PutMapping("/streaming")
-    public ResponseEntity<Streaming> updateStreaming(@Valid @RequestBody StreamingRequest request){
-        Streaming streaming = streamingService.updateStreaming(request);
+    @PutMapping("/streaming/{code}")
+    public ResponseEntity<Streaming> updateStreaming(@PathVariable String code, @RequestHeader(value="Authorization") String token, @Valid @RequestBody StreamingRequest request){
+        Streaming streaming = streamingService.updateStreaming(code, token, request);
         return ResponseEntity.ok().body(streaming);
     }
 
-    @DeleteMapping("/streaming/{idStreaming}")
-    public ResponseEntity<Void> deleteStreaming(@PathVariable Integer idStreaming){
-        streamingService.deleteStreaming(idStreaming);
+    @DeleteMapping("/streaming/delete/{code}")
+    public ResponseEntity<Void> deleteStreaming(@PathVariable String code, @RequestHeader(value="Authorization") String token){
+        streamingService.deleteStreaming(code, token);
         return ResponseEntity.ok().build();
     }
 
