@@ -86,7 +86,7 @@
         headers: {
           'Authorization': '9bc06ce8-f4f4-4399-b377-cfc7ead3dbb9'
         },
-        url: "http://localhost:8080/streaming/" + 1,
+        url: "http://localhost:8080/streaming/" + "A1",
         success: function (response) {
           $('#audioStreaming').attr("src", response.podcast["contentURL"]);
           $('#titleStreaming').text = response.podcast["title"]
@@ -100,7 +100,7 @@
         headers: {
           'Authorization': '9bc06ce8-f4f4-4399-b377-cfc7ead3dbb9'
         },
-        url: "http://localhost:8080/comments/streaming/" + 1,
+        url: "http://localhost:8080/comments/streaming/" + "A1",
         success: function (response) {
           response.forEach(comment => $('#commentStreaming').append('<div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up"><div class="text"><h3 class="font-weight-light">'+ comment['content'] + '</h3><div class="text-white mb-3"><span class="text-black-opacity-05">' + comment.usuario['username'] + '<small><spanclass="sep">/' + comment['creationDate'] + '</span><span class="sep">/</span></small></span></div></div></div>'))
           $('#audioStreaming').attr("src", response.podcast["contentURL"]);
