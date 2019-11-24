@@ -1,6 +1,7 @@
 package mx.ourpodcast.request;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -18,7 +19,7 @@ public class CommentRequest{
     private Integer idStreaming;
 
     @NotNull(message = "La fecha-hora es nula")
-    private LocalDateTime creationDate;
+    LocalDateTime creationDate;
 
     @NotNull(message = "El contenido es nulo")
     @Size(min = 5, max = 500, message 

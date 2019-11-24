@@ -21,31 +21,20 @@ import mx.ourpodcast.request.CommentRequest;
 public class CommentService {
 
     @Autowired
-    private CommentRepository commentRepository;
+	private CommentRepository commentRepository;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 
-	public List<Comment> getAllComments() {
-		return commentRepository.findAll();
-	}
+	@Autowired
+	private StreamingService streamingService;
+
 
 	public List<Comment> getAllCommentsByStreaming(int idStreaming) {
 
-		StreamingService streamingService = new StreamingService();
 		Streaming streaming = streamingService.getStreamingById(idStreaming);
 		List<Comment> comments = commentRepository.findAllByStreaming(streaming);
 		return comments;
-	}
-
-	public Comment getCommentById(int idComment) {
-	Comment commentEncontrado;	
-    
-    try{
-      commentEncontrado = commentRepository.findById(idComment).get();
-    }
-    catch(NoSuchElementException e){
-		throw new CommentNotFoundException("No existe un comentario con id "+ idComment);
-      
-    }
-     return commentEncontrado;
 	}
 
 	public Comment createComment(@Valid CommentRequest request) {
@@ -54,62 +43,17 @@ public class CommentService {
 			comment.setCreationDate(request.getCreationDate());
 			comment.setContent(request.getContent());
 			
-			StreamingService streamingService = new StreamingService();
+			//UsuarioService usuarioService = new UsuarioService();
+			Usuario usuario = usuarioService.getUsuarioById(request.getIdUsuario());
+			
+			//StreamingService streamingService = new StreamingService();
 			Streaming streaming = streamingService.getStreamingById(request.getIdStreaming());
 			comment.setStreaming(streaming);
-			
-			UsuarioService usuarioService = new UsuarioService();
-            Usuario usuario = usuarioService.getUsuarioById(request.getIdUsuario());
 
 			comment.setUsuario(usuario);
 			commentRepository.save(comment);
             return comment;
         
-	}
-
-	public Comment updateComment(@Valid CommentRequest request) {
-		Comment commentEncontrado;	
-    
-    try{
-      commentEncontrado = commentRepository.findById(request.getIdComment()).get();
-    }
-    catch(NoSuchElementException e){
-		throw new CommentNotFoundException("No existe un comentario con esos datos " + request);
-      
-    }
-    
-			commentEncontrado.setCreationDate(request.getCreationDate());
-			commentEncontrado.setContent(request.getContent());
-			
-			StreamingService streamingService = new StreamingService();
-			Streaming streaming = streamingService.getStreamingById(request.getIdStreaming());
-			commentEncontrado.setStreaming(streaming);
-			
-			UsuarioService usuarioService = new UsuarioService();
-			Usuario usuario = usuarioService.getUsuarioById(request.getIdUsuario());
-			
-			commentEncontrado.setUsuario(usuario);
-			commentRepository.save(commentEncontrado);
-            return commentEncontrado;
-        
-	}
-
-	public void deleteComment(int idComment) {
-		Comment commentEncontrado;	
-    
-    try{
-      commentEncontrado = commentRepository.findById(idComment).get();
-    }
-    catch(NoSuchElementException e){
-		throw new CommentNotFoundException("No existe un comentario con id "+ idComment);
-      
-    }
-     
-			commentRepository.delete(commentEncontrado);
-		
-			throw new CommentNotFoundException("No existe un comentario con id "+ idComment);
-		
-
 	}
 
 }

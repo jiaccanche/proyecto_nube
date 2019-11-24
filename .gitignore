@@ -4,7 +4,6 @@ src/main/java/mx/ourpodcast/SecurityConfig.java
 *.code-workspace
 target/*
 target/*
-src/main/resources/*
 src/main/resources/application.properties
 .classpath
 .project
