@@ -1,9 +1,11 @@
+src/main/java/mx/ourpodcast/model/Usuario.java
+src/main/java/mx/ourpodcast/SecurityConfig.java
 .vscode/*
 *.code-workspace
 target/*
 target/*
-#src/main/resources/*
-#src/main/resources/application.properties
+src/main/resources/*
+src/main/resources/application.properties
 .classpath
 .project
 .settings/org.eclipse.core.resources.prefs

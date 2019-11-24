@@ -1,9 +1,12 @@
 package mx.ourpodcast.model;
 
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.time.LocalDateTime;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,13 +47,48 @@ public class Usuario{
     @Column(name = "token")
     private String token;
 
-
     public boolean isState() {
         return this.state;
     }
     
 
+    @Column(name = "intengoslogin")
+    private Integer intentoLogin;
+    
+    @Column(name = "tiempoIniToken")
+    private LocalDateTime tiempoIniToken;
+
+
+
     public Usuario(){}
+
+    /**
+     * @return the intentoLogin
+     */
+    public Integer getIntentoLogin() {
+        return intentoLogin;
+    }
+    /**
+     * @return the tiempoIniToken
+     */
+    public LocalDateTime getTiempoIniToken() {
+        return tiempoIniToken;
+    }
+
+    /**
+     * @param intentoLogin the intentoLogin to set
+     */
+    public void setIntentoLogin(Integer intentoLogin) {
+        this.intentoLogin = intentoLogin;
+    }
+    /**
+     * @param tiempoIniToken the tiempoIniToken to set
+     */
+    public void setTiempoIniToken(LocalDateTime tiempoIniToken) {
+        this.tiempoIniToken = tiempoIniToken;
+    }
+
+
 
     /**
      * @return the idUsuario

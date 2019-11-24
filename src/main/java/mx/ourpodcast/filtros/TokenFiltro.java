@@ -1,7 +1,5 @@
 package mx.ourpodcast.filtros;
 import java.io.IOException;
-import java.util.Date;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -31,8 +29,6 @@ public class TokenFiltro extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
-
-			System.out.println("Entro al filtro");
 			HttpServletRequest servRequest = (HttpServletRequest) request;
 			String token = servRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
