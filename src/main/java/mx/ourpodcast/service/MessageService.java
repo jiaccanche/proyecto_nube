@@ -102,11 +102,4 @@ public class MessageService{
         return idusuario == user.getIdUsuario();
     }
 
-    public boolean chatvalido(Chat chat) {
-        if(chat == null) return false;
-        
-        return this.validarPermiso(chat.getUsuario1().getIdUsuario()) 
-        || this.validarPermiso(chat.getUsuario2().getIdUsuario());
-    }
-
 }

@@ -26,51 +26,59 @@ public class TokenFiltro extends GenericFilterBean {
 	private final UsuarioRepository usuarioRepo;
 	private final int SECONDS_ONE_MINUTE = 60;
 
-	public TokenFiltro(UsuarioRepository usuarioRepository) {
+	public TokenFiltro(final UsuarioRepository usuarioRepository) {
 		this.usuarioRepo = usuarioRepository;
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-		throws IOException, ServletException {
-		
-		HttpServletRequest servRequest = (HttpServletRequest) request;
-			
-		String token = servRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		Usuario user = usuarioRepo.findByToken(token);
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
+			throws IOException, ServletException {
 
-		boolean validate_credentials = this.validateUserParameters(user) && this.validateToken(user);
+		final HttpServletRequest servRequest = (HttpServletRequest) request;
+
+		final String token = servRequest.getHeader(HttpHeaders.AUTHORIZATION);
+		final Usuario user = usuarioRepo.findByToken(token);
+
+		final boolean validate_credentials = this.validateUserParameters(user) && this.validateToken(user);
 		if (validate_credentials) {
-			Authentication auth = new UsernamePasswordAuthenticationToken(user, null, null);
-	        SecurityContextHolder.getContext().setAuthentication(auth);
-			}
+			final Authentication auth = new UsernamePasswordAuthenticationToken(user, null, null);
+			SecurityContextHolder.getContext().setAuthentication(auth);
+		}
 
 		chain.doFilter(request, response);
-	}   
+	}
 
-	public boolean validateToken(Usuario user){
-		int time_permitted = 500;
-		Long diffTime =  this.restarDatetime(user.getTiempoIniToken(), LocalDateTime.now() );
+	public boolean validateToken(final Usuario user) {
+		final int time_permitted = 500;
+		final Long diffTime = this.restarDatetime(user.getTiempoIniToken(), LocalDateTime.now());
 		return !(diffTime > (long) time_permitted || user.getToken() == null);
 
 	}
-	public long restarDatetime(LocalDateTime dateTimeToken, LocalDateTime dateTimeRequest){
-		Duration duration = Duration.between(dateTimeToken, dateTimeRequest);
-		long seconds = duration.getSeconds();
-		long minutes = seconds/SECONDS_ONE_MINUTE;
+
+	public long restarDatetime(final LocalDateTime dateTimeToken, final LocalDateTime dateTimeRequest) {
+		final Duration duration = Duration.between(dateTimeToken, dateTimeRequest);
+		final long seconds = duration.getSeconds();
+		final long minutes = seconds / SECONDS_ONE_MINUTE;
 		return minutes;
 	}
 
-	public boolean validateUserParameters(Usuario user){
-		
+	public boolean validateUserParameters(final Usuario user){
+	
 		try{
+			
 			boolean  result = false;
-			result = (user != null 
-			&& user.getIntentoLogin() < 3 
-			&& user.getTiempoIniToken() != null);
+			result = (user != null && user.getTiempoIniToken() != null);
+
+			if(result){
+				Integer intent = (user.getIntentoLogin() == null) ? 0:user.getIntentoLogin();
+				user.setIntentoLogin(intent);
+				usuarioRepo.save(user);
+				result = result && user.getIntentoLogin() < 3;
+			}
+			
 			return result;
 			
-		}catch(NullPointerException e){
+		}catch(final NullPointerException e){
 			return false;
 		}
 			
