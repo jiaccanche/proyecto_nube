@@ -32,9 +32,9 @@ public class CommentRest{
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
-    @GetMapping("comments/streaming/{idStreaming}")
-    public ResponseEntity<List<Comment>> getCommentsByContent(@PathVariable int idStreaming){
-        List<Comment> comments = commentService.getAllCommentsByStreaming(idStreaming);
+    @GetMapping("comments/streaming/{codeStreaming}")
+    public ResponseEntity<List<Comment>> getCommentsByContent(@PathVariable String codeStreaming){
+        List<Comment> comments = commentService.getAllCommentsByStreaming(codeStreaming);
         return ResponseEntity.ok().body(comments);
     }
 }

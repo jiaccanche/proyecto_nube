@@ -30,9 +30,9 @@ public class CommentService {
 	private StreamingService streamingService;
 
 
-	public List<Comment> getAllCommentsByStreaming(int idStreaming) {
+	public List<Comment> getAllCommentsByStreaming(String codeStreaming) {
 
-		Streaming streaming = streamingService.getStreamingById(idStreaming);
+		Streaming streaming = streamingService.getStreamingByCode(codeStreaming);
 		List<Comment> comments = commentRepository.findAllByStreaming(streaming);
 		return comments;
 	}
@@ -47,7 +47,7 @@ public class CommentService {
 			Usuario usuario = usuarioService.getUsuarioById(request.getIdUsuario());
 			
 			//StreamingService streamingService = new StreamingService();
-			Streaming streaming = streamingService.getStreamingById(request.getIdStreaming());
+			Streaming streaming = streamingService.getStreamingByCode(request.getCodeStreaming());
 			comment.setStreaming(streaming);
 
 			comment.setUsuario(usuario);
