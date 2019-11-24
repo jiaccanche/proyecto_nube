@@ -14,8 +14,9 @@ public interface StreamingRepository extends JpaRepository<Streaming, Integer>{
 
 	//TODO: Añadir query para obtener los streamings que se pongan en una fecha determinada
 
-	List<Streaming> findAllByUsuario(Usuario usuario);
-
+	List<Streaming> findByUsuario(Usuario usuario);
+	Streaming findByCode(String code);
+    
 	List<Streaming> findAllBybeginDateTime(LocalDateTime dateTime);
 	List<Streaming> findAllByfinishDateTime(LocalDateTime dateTime);
 

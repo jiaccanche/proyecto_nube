@@ -3,8 +3,11 @@ package mx.ourpodcast.service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Random;
 
+import org.hibernate.annotations.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -13,8 +16,11 @@ import org.springframework.http.HttpRange;
 import org.springframework.stereotype.Service;
 
 import mx.ourpodcast.exceptions.PodcastNotFoundException;
+import mx.ourpodcast.exceptions.UsuarioNotFoundException;
 import mx.ourpodcast.model.Podcast;
+import mx.ourpodcast.model.Usuario;
 import mx.ourpodcast.repository.PodcastRepository;
+import mx.ourpodcast.repository.UsuarioRepository;
 import mx.ourpodcast.request.PodcastRequest;
 
 @Service
@@ -22,47 +28,78 @@ public class PodcastService {
 
     @Autowired
     private PodcastRepository podcastRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    public List<Podcast> getAllPodcast(){
-        List<Podcast> podcasts = podcastRepository.findAll();
+    public List<Podcast> getAllPodcast(String token){
+        Usuario userEncontrado = usuarioRepository.findByToken(token);
+        List<Podcast> podcasts = podcastRepository.findByUsuario(userEncontrado);
         return podcasts;
     }
 
-    public Podcast createPodcast(PodcastRequest request) {        
+    public Podcast createPodcast(PodcastRequest request, String token) { 
+        Usuario userEncontrado;
+        try{
+            userEncontrado = usuarioRepository.findByToken(token);
+          }
+          catch(NoSuchElementException e){
+              throw new UsuarioNotFoundException("No tienes acceso");
+            
+          }
+            String code = generateCode();
+          
             Podcast podcast = new Podcast();
-            podcast.setCode(request.getCode());
+            podcast.setCode(code);
             podcast.setContentUrl(request.getContentUrl());
             podcast.setTitle(request.getTitle());
+            podcast.setUsuario(userEncontrado);
 
             podcastRepository.save(podcast);
             return podcast;
     }
 
-    public Podcast updatePodcast(PodcastRequest request) {
+    public Podcast updatePodcast(String code, PodcastRequest request, String token) {
         //Agregar validación
-        Optional<Podcast> optional = podcastRepository.findById(request.getidPodcast());
-        if(optional.isPresent()){
-            Podcast podcast = optional.get();
-            podcast.setCode(request.getCode());
-            podcast.setContentUrl(request.getContentUrl());
-            podcast.setTitle(request.getTitle());
-           
-            podcastRepository.save(podcast);
-            return podcast;
-        } else{
-            throw new PodcastNotFoundException("No existe el podcast con el id " + request.getidPodcast());
-        }
+        Usuario userEncontrado;
+        try{
+            userEncontrado = usuarioRepository.findByToken(token);
+          }
+          catch(NoSuchElementException e){
+              throw new UsuarioNotFoundException("No tienes acceso");
+            
+          }
+
+          Optional<Podcast> podcastEncontrado;
+          try{
+            podcastEncontrado = podcastRepository.findByCode(code);
+          }
+          catch(NoSuchElementException e){
+              throw new UsuarioNotFoundException("No tienes acceso");  
+          }
+       
+
+            if(userEncontrado.getIdUsuario() != podcastEncontrado.get().getUsuario().getIdUsuario()){
+              throw new PodcastNotFoundException("Petición denegada");
+            }
+               Podcast podcast = podcastEncontrado.get();
+               podcast.setContentUrl(request.getContentUrl());
+               podcast.setTitle(request.getTitle());
+               podcastRepository.save(podcast);  
+               return podcast;
+        
     }
 
-    public void deletePodcast(int idPodcast) {
+    public void deletePodcast(String code) {
         
-        Optional<Podcast> optional = podcastRepository.findById(idPodcast);
-        if(optional.isPresent()){
-            Podcast podcast = optional.get();
-            podcastRepository.delete(podcast);
-        } else{
-            throw new PodcastNotFoundException("No existe el podcast con el id " + idPodcast);
+        Optional<Podcast> podcastEncontrado;
+        try{
+          podcastEncontrado = podcastRepository.findByCode(code);
         }
+        catch(NoSuchElementException e){
+            throw new UsuarioNotFoundException("No tienes acceso");  
+        }
+
+        podcastRepository.delete(podcastEncontrado.get());
     }
 
     public Podcast getPodcastById(int idPodcast) {
@@ -72,6 +109,35 @@ public class PodcastService {
         } else {
             throw new PodcastNotFoundException("No existe un podcast con el id " + idPodcast);
         }
+
+    }
+
+    public Podcast getPodcastByCode(String token, String code) {
+        Usuario userEncontrado;
+        try{
+            userEncontrado = usuarioRepository.findByToken(token);
+          }
+          catch(NoSuchElementException e){
+              throw new UsuarioNotFoundException("Petición denegada");
+            
+          }
+        
+        Optional<Podcast> podcastEncontrado;
+          try{
+           podcastEncontrado = podcastRepository.findByCode(code);
+          }
+          catch(NoSuchElementException e){
+              throw new PodcastNotFoundException("Petición denegada");
+            
+          }
+
+        if(userEncontrado.getIdUsuario()!=podcastEncontrado.get().getUsuario().getIdUsuario()){
+            throw new PodcastNotFoundException("Petición denegada"); 
+        }
+        
+        return podcastEncontrado.get();
+        
+       
 
     }
 
@@ -129,5 +195,16 @@ public class PodcastService {
         long paso = Math.min(1 * 1024 * 1024, fin - inicio + 1);
         return new ResourceRegion(video, inicio, paso);
         
+    }
+
+    private String generateCode(){
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+          StringBuilder salt = new StringBuilder();
+          Random rnd = new Random();
+          while (salt.length() < 5) { // length of the random string.
+              int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+              salt.append(SALTCHARS.charAt(index));
+          }
+        return salt.toString();
     }
 }
