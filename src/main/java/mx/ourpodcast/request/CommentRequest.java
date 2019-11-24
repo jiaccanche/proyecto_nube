@@ -16,7 +16,7 @@ public class CommentRequest{
     private Integer idUsuario;
 
     @NotNull(message = "El streaming es nulo")
-    private Integer idStreaming;
+    private String codeStreaming;
 
     @NotNull(message = "La fecha-hora es nula")
     LocalDateTime creationDate;
@@ -59,15 +59,15 @@ public class CommentRequest{
     /**
      * @return the streaming
      */
-    public Integer getIdStreaming() {
-        return idStreaming;
+    public String getCodeStreaming() {
+        return codeStreaming;
     }
 
     /**
      * @param streaming the streaming to set
      */
-    public void setIdStreaming(Integer idStreaming) {
-        this.idStreaming = idStreaming;
+    public void setCodeStreaming(String codeStreaming) {
+        this.codeStreaming = codeStreaming;
     }
 
     /**
