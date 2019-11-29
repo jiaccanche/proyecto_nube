@@ -1,5 +1,7 @@
 package mx.ourpodcast.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -40,7 +42,9 @@ public class CommentService {
 	public Comment createComment(@Valid CommentRequest request) {
 		
 			Comment comment = new Comment();
-			comment.setCreationDate(request.getCreationDate());
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        	LocalDateTime localDateTime = LocalDateTime.parse(request.getCreationDate(),formatter);
+			comment.setCreationDate(localDateTime);
 			comment.setContent(request.getContent());
 			
 			//UsuarioService usuarioService = new UsuarioService();
@@ -51,8 +55,8 @@ public class CommentService {
 			comment.setStreaming(streaming);
 
 			comment.setUsuario(usuario);
-			commentRepository.save(comment);
-            return comment;
+			
+            return commentRepository.save(comment);
         
 	}
 

@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import mx.ourpodcast.exceptions.ChatUnauthorizedException;
 import mx.ourpodcast.exceptions.MessageNotFoundException;
+import mx.ourpodcast.exceptions.MessageUnauthorizedException;
 import mx.ourpodcast.model.Chat;
 import mx.ourpodcast.model.Message;
 import mx.ourpodcast.model.Usuario;
@@ -38,14 +40,10 @@ public class MessageService{
         try{
             Optional<Message> optional;
             optional = messageRepository.findById(idMessage);
-            if(optional.isPresent()){
             return optional.get();
-            }else{
-                throw new MessageNotFoundException(
-                "No es posible acceder al mensaje con id " + idMessage);
-            }
+            
         }catch(NullPointerException | NoSuchElementException e){
-            throw new MessageNotFoundException("No existe el mensaje");
+            throw new MessageNotFoundException("No existe el mensaje con id " + idMessage);
         }
 	}
 
@@ -61,15 +59,18 @@ public class MessageService{
 
         Chat chat = chatService.getChatById(request.getIdChat());
 
-        Usuario usuario = (Usuario)SecurityContextHolder.getContext().getAuthentication().getPrincipal();    
+        Usuario usuario = (Usuario)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(usuario.getIdUsuario() != request.getIdUsuario()){
+            throw new MessageUnauthorizedException("No puede enviar mensajes desde otro usuario");
+        }    
         Message message = new Message();
         message.setContent(request.getContent());
         LocalDateTime sendDate = this.convertStringToLocalDateTime(request.getSendDate());
         message.setSendDate(sendDate);
         message.setUsuario(usuario);
         message.setChat(chat);
-        messageRepository.save(message);
-        return message;
+        
+        return messageRepository.save(message);
 	}
 
 	public void deleteMessage(Integer idMessage) {
@@ -77,15 +78,14 @@ public class MessageService{
             Optional<Message> optional = messageRepository.findById(idMessage);
             Integer id_user = optional.get().getUsuario().getIdUsuario();
 
-            if(optional.isPresent() && this.validarPermiso(id_user)){
-                messageRepository.delete(optional.get());
-            }else{
-                throw new MessageNotFoundException(
-                "No es posible acceder al mensaje con el indentificador " + idMessage);
+            if(!validarPermiso(id_user)){
+                throw new MessageUnauthorizedException("No tiene permiso de borrar el mensaje");
             }
+            
+            messageRepository.delete(optional.get());
 
         }catch(NullPointerException | NoSuchElementException e){
-        throw new MessageNotFoundException("No existe el mensaje");
+            throw new MessageNotFoundException("No existe el mensaje con id " + idMessage);
         }
     }
 

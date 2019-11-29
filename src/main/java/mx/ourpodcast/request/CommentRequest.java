@@ -19,7 +19,7 @@ public class CommentRequest{
     private String codeStreaming;
 
     @NotNull(message = "La fecha-hora es nula")
-    LocalDateTime creationDate;
+    String creationDate;
 
     @NotNull(message = "El contenido es nulo")
     @Size(min = 5, max = 500, message 
@@ -87,14 +87,14 @@ public class CommentRequest{
     /**
      * @return the  creationDate
      */
-    public LocalDateTime getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
     /**
      * @param creationDate the creationDate to set
      */
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
