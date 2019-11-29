@@ -39,7 +39,7 @@ public class TokenFiltro extends GenericFilterBean {
 		final String token = servRequest.getHeader(HttpHeaders.AUTHORIZATION);
 		final Usuario user = usuarioRepo.findByToken(token);
 
-		final boolean validate_credentials = this.validateUserParameters(user) && this.validateToken(user);
+		final boolean validate_credentials = this.validateUserParameters(user);
 		if (validate_credentials) {
 			final Authentication auth = new UsernamePasswordAuthenticationToken(user, null, null);
 			SecurityContextHolder.getContext().setAuthentication(auth);
