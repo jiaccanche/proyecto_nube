@@ -57,8 +57,8 @@ public class UsuarioRest{
     }
 
     @DeleteMapping("/usuario/{idUsuario}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable @NotBlank @NotNull Integer idUsuario){
-        usuarioService.deleteUsuarioById(idUsuario);
+    public ResponseEntity<Void> deleteUsuario(){
+        usuarioService.deleteUsuario();
         return ResponseEntity.ok().build();
     }
 

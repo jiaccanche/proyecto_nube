@@ -86,14 +86,10 @@ public class UsuarioService{
         }
 	}
 
-	public void deleteUsuarioById(Integer idUsuario) {
+	public void deleteUsuario() {
       try{
-        Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
-        if(optional.isPresent()){
-            usuarioRepository.delete(optional.get());
-        }else{
-            throw new UsuarioNotFoundException("No existe un usuario con el identificado " + idUsuario);
-        }
+          Usuario user = (Usuario)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+          usuarioRepository.delete(user);
      }catch(NullPointerException | NoSuchElementException e){
         throw new UsuarioNotFoundException(
             "El identificador no puede ser null, o no la petición es incorrecta.");

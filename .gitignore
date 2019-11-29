@@ -5,6 +5,7 @@ src/main/java/mx/ourpodcast/SecurityConfig.java
 target/*
 target/*
 src/main/resources/application.properties
+./src/main/resources/application.properties
 .classpath
 .project
 .settings/org.eclipse.core.resources.prefs
