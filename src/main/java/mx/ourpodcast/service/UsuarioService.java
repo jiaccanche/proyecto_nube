@@ -19,6 +19,7 @@ import mx.ourpodcast.exceptions.BadRequestException;
 import mx.ourpodcast.exceptions.UsuarioAlreadyExistsException;
 import mx.ourpodcast.exceptions.UsuarioBloqueado;
 import mx.ourpodcast.exceptions.UsuarioNotFoundException;
+import mx.ourpodcast.exceptions.UsuarioUnauthorizedException;
 import mx.ourpodcast.model.Usuario;
 import mx.ourpodcast.repository.UsuarioRepository;
 import mx.ourpodcast.request.UsuarioRequest;
@@ -37,13 +38,10 @@ public class UsuarioService{
 	}
 
 	public Usuario getUsuarioById(Integer idUsuario) {
-       try{ Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
-        if(optional.isPresent()){
-            return optional.get();
-        }else{
-            throw new UsuarioNotFoundException("No existe un usuario con un indetificador " + idUsuario);
-        }
-
+        Optional<Usuario> optional;
+        try{ 
+           optional = usuarioRepository.findById(idUsuario);
+           return optional.get();
         }catch(NullPointerException | NoSuchElementException e){
             throw new UsuarioNotFoundException(
                 "No existe un usuario con identificador:" + idUsuario +", o no la petición es incorrecta.");
@@ -61,42 +59,39 @@ public class UsuarioService{
 
         Usuario usuario = new Usuario();
         this.changeRequestUsuarioToUsuario(request,usuario);
-        usuarioRepository.save(usuario);
-        return usuario;
+        return usuarioRepository.save(usuario);
         }catch(NullPointerException | NoSuchElementException e){
         throw new BadRequestException("No se realizó la petición de manera correcta.");
         }
 	}
 
-	public Usuario updateUsuario(@Valid UsuarioRequest request) {
-       try{
-        Optional<Usuario> optional = usuarioRepository.findById(request.getIdUsuario());
+	public Usuario updateUsuario(UsuarioRequest request) {
         
-        if(!optional.isPresent()){
-        throw new UsuarioNotFoundException(
-            "No existe un usuario con el identificador " + request.getIdUsuario()
-            );
-        }
-        Usuario usuario = optional.get();
-        this.changeRequestUsuarioToUsuario(request, usuario);
-        return usuario;
+        Usuario usuario;
+        try{
+            Optional<Usuario> optional = usuarioRepository.findById(request.getIdUsuario());
+            usuario = optional.get();
         }catch(NullPointerException | NoSuchElementException e){
-        throw new UsuarioNotFoundException(
-            "El indetificador no puede ser null, o no la petición es incorrecta.");
+            throw new UsuarioNotFoundException(
+                "No existe un usuario con el identificador " + request.getIdUsuario()
+                );
+        }
+        
+        Usuario user = (Usuario)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(user.getIdUsuario()==usuario.getIdUsuario()){
+            changeRequestUsuarioToUsuario(request, usuario);
+            return usuarioRepository.save(usuario);
+        }else{
+            throw new UsuarioUnauthorizedException("No tiene permiso para editar la info del usuario " + user.getIdUsuario());
         }
 	}
 
 	public void deleteUsuarioById(Integer idUsuario) {
-      try{
-        Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
-        if(optional.isPresent()){
+        try{
+            Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
             usuarioRepository.delete(optional.get());
-        }else{
+        }catch(NullPointerException | NoSuchElementException e){
             throw new UsuarioNotFoundException("No existe un usuario con el identificado " + idUsuario);
-        }
-     }catch(NullPointerException | NoSuchElementException e){
-        throw new UsuarioNotFoundException(
-            "El identificador no puede ser null, o no la petición es incorrecta.");
         }
     }
 

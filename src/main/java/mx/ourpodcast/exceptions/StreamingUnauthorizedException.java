@@ -2,10 +2,10 @@ package mx.ourpodcast.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class StreamingNotFoundException extends RuntimeException{
-    public StreamingNotFoundException(String message){
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class StreamingUnauthorizedException extends RuntimeException{
+
+    public StreamingUnauthorizedException(String message){
         super(message);
     }
-
 }

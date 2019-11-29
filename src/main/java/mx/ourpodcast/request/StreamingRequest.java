@@ -8,7 +8,9 @@ public class StreamingRequest {
 
     private String finishDateTime;
 
-    private String podcastCode;
+    private Integer idPodcast;
+
+    private String code;
     
     public StreamingRequest(){}
 
@@ -31,12 +33,32 @@ public class StreamingRequest {
     }
    
 
-    public String getPodcastCode() {
-        return this.podcastCode;
+    /**
+     * @return the idPodcast
+     */
+    public Integer getIdPodcast() {
+        return idPodcast;
     }
 
-    public void setPodcastCode(String podcastCode) {
-        this.podcastCode = podcastCode;
+    /**
+     * @param idPodcast the idPodcast to set
+     */
+    public void setIdPodcast(Integer idPodcast) {
+        this.idPodcast = idPodcast;
+    }
+
+    /**
+     * @return the code
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * @param code the code to set
+     */
+    public void setCode(String code) {
+        this.code = code;
     }
     
 

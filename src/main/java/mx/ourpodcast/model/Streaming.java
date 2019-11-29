@@ -34,13 +34,13 @@ public class Streaming {
     @Column(name = "finishDateTime")
     private LocalDateTime finishDateTime;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_usuario", referencedColumnName= "id_usuario", nullable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
     @JsonIgnore
     private Usuario usuario;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "id_podcast", referencedColumnName = "id_podcast", nullable = false)
+    @JoinColumn(name = "id_podcast", nullable = false)
     private Podcast podcast;
     
     @Column(name = "code")

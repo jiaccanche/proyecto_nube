@@ -16,6 +16,7 @@ public class PodcastRequest{
     @NotEmpty(message = "El contenido es vacío")
     private String contentUrl;
 
+    private String code;
     
     public PodcastRequest(){}
     
@@ -53,6 +54,18 @@ public class PodcastRequest{
         this.contentUrl = contentUrl;
     }
 
-    
+    /**
+     * @return the code
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * @param code the code to set
+     */
+    public void setCode(String code) {
+        this.code = code;
+    }
 
 }
