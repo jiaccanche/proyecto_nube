@@ -60,7 +60,7 @@ public class StreamingRest{
         return ResponseEntity.ok().body(streaming);
     }
 
-    @DeleteMapping("/streaming/delete/{code}")
+    @DeleteMapping("/streaming/{code}")
     public ResponseEntity<Void> deleteStreaming(@PathVariable String code){
         streamingService.deleteStreaming(code);
         return ResponseEntity.ok().build();
